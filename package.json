@@ -12,6 +12,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/cli": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
     "@distube/ytdl-core": "^5.0.2",
     "cheerio": "^1.2.0",
     "crypto-js": "^4.2.0",

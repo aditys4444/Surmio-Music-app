@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Surmio</string>
+    <string name="title_activity_main">Surmio</string>
+    <string name="package_name">com.surmio.music</string>
+    <string name="custom_url_scheme">com.surmio.music</string>
+</resources>

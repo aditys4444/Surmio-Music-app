@@ -869,6 +869,31 @@
     }
   } catch (_) {}
 
+  // Base URL for backend API (handles native Capacitor Android APK vs Web Browser)
+  function getApiBase() {
+    try {
+      const isNative = (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) ||
+        (window.location.protocol === 'https:' && window.location.hostname === 'localhost' && !window.location.port) ||
+        (window.location.protocol === 'capacitor:');
+      if (isNative) {
+        return localStorage.getItem('surmio_api_server') || 'http://10.0.2.2:3000';
+      }
+    } catch (_) {}
+    return '';
+  }
+
+  function apiUrl(path) {
+    if (!path) return '';
+    if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('blob:') || path.startsWith('data:')) {
+      return path;
+    }
+    const base = getApiBase();
+    if (!base) return path;
+    const cleanBase = base.replace(/\/+$/, '');
+    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+    return `${cleanBase}${cleanPath}`;
+  }
+
   // ==========================================
   // DOM Elements Cache
   // ==========================================
@@ -1806,7 +1831,7 @@
       const streamId = track.id || track.youtubeId || 'track-1';
       const targetSrc = (track.isLocalFile || (track.streamUrl && (track.streamUrl.startsWith('blob:') || track.streamUrl.startsWith('data:'))))
         ? track.streamUrl
-        : `/api/stream/${encodeURIComponent(streamId)}`;
+        : apiUrl(`/api/stream/${encodeURIComponent(streamId)}`);
 
       if (audio.src !== targetSrc && !audio.src.endsWith(targetSrc)) {
         audio.src = targetSrc;
@@ -1888,7 +1913,7 @@
     if (audio) {
       if (!audio.src || audio.src === window.location.href || audio.src.endsWith('/')) {
         const streamId = track.id || track.youtubeId || 'track-1';
-        audio.src = `/api/stream/${encodeURIComponent(streamId)}`;
+        audio.src = apiUrl(`/api/stream/${encodeURIComponent(streamId)}`);
       }
       ensureAudioContextRunning();
       audio.play().then(() => {
@@ -2602,7 +2627,7 @@
       }
 
       // 2. Fetch real audio from authorized streaming/download endpoint
-      const streamUrl = `/api/stream/${encodeURIComponent(track.id)}?download=1`;
+      const streamUrl = apiUrl(`/api/stream/${encodeURIComponent(track.id)}?download=1`);
       const res = await fetch(streamUrl);
       const contentType = res.headers.get('content-type') || '';
 
@@ -2667,7 +2692,7 @@
       };
 
       try {
-        await fetch('/api/download', {
+        await fetch(apiUrl('/api/download'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -2727,7 +2752,7 @@
 
   async function loadDownloads() {
     try {
-      const res = await fetch('/api/downloads');
+      const res = await fetch(apiUrl('/api/downloads'));
       if (res.ok) {
         const data = await res.json();
         if (data && Array.isArray(data.downloads)) {
@@ -2844,7 +2869,7 @@
           e.stopPropagation();
           const cleanName = (item.title || 'song').replace(/[/\\?%*:|"<>]/g, '_').trim() || 'track';
           const a = document.createElement('a');
-          a.href = `/api/stream/${encodeURIComponent(item.trackId || item.id)}?download=1`;
+          a.href = apiUrl(`/api/stream/${encodeURIComponent(item.trackId || item.id)}?download=1`);
           a.download = `${cleanName}.mp3`;
           document.body.appendChild(a);
           a.click();
@@ -2864,7 +2889,7 @@
             isDanger: true,
             onConfirm: async () => {
               try {
-                await fetch(`/api/downloads/${encodeURIComponent(item.id)}`, { method: 'DELETE' });
+                await fetch(apiUrl(`/api/downloads/${encodeURIComponent(item.id)}`), { method: 'DELETE' });
               } catch (_) {}
               state.downloads = state.downloads.filter((d) => d.id !== item.id && d.trackId !== item.trackId);
               try {
@@ -4499,7 +4524,7 @@
         if (DOM.infiniteLoader) DOM.infiniteLoader.style.display = 'flex';
         DOM.loadMoreBtn.disabled = true;
         try {
-          const res = await fetch('/api/feed');
+          const res = await fetch(apiUrl('/api/feed'));
           if (res.ok) {
             const data = await res.json();
             if (data && data.feed && data.feed.length > 0) {
@@ -5243,7 +5268,7 @@
     }
 
     try {
-      const res = await fetch('/api/autofetch');
+      const res = await fetch(apiUrl('/api/autofetch'));
       if (res.ok) {
         const data = await res.json();
         if (data && data.videos && data.videos.length > 0) {
@@ -5282,7 +5307,7 @@
 
   async function loadInitialCatalog() {
     try {
-      const res = await fetch('/api/videos');
+      const res = await fetch(apiUrl('/api/videos'));
       if (res.ok) {
         const data = await res.json();
         if (data && data.videos && data.videos.length > 0) {
@@ -5348,7 +5373,7 @@
     // Continuous automatic live sync with scraper every 2.5 minutes
     setInterval(async () => {
       try {
-        const res = await fetch('/api/videos');
+        const res = await fetch(apiUrl('/api/videos'));
         if (res.ok) {
           const data = await res.json();
           if (data && data.videos && data.videos.length > state.allTracks.length) {
@@ -5733,7 +5758,7 @@
 
           // If few items in this category, automatically trigger live scraper sync
           if (filtered.length < 15) {
-            fetch(`/api/category/sync?cat=${encodeURIComponent(cat)}`)
+            fetch(apiUrl(`/api/category/sync?cat=${encodeURIComponent(cat)}`))
               .then((r) => r.json())
               .then((data) => {
                 if (data && data.tracks && data.tracks.length > 0) {
@@ -5863,7 +5888,7 @@
 
   async function fetchSuggestions(q) {
     try {
-      const res = await fetch(`/api/suggestions?q=${encodeURIComponent(q)}`);
+      const res = await fetch(apiUrl(`/api/suggestions?q=${encodeURIComponent(q)}`));
       const data = await res.json();
       if (data && data.suggestions && data.suggestions.length > 0) {
         DOM.suggestList.innerHTML = '';
@@ -6039,7 +6064,7 @@
 
     // 2. Fetch live YMusic YouTube search results
     try {
-      const res = await fetch(`/api/ymusic/search?q=${encodeURIComponent(query)}`);
+      const res = await fetch(apiUrl(`/api/ymusic/search?q=${encodeURIComponent(query)}`));
       const data = await res.json();
       if (data && data.items && data.items.length > 0) {
         data.items.forEach((yt) => {
@@ -6271,6 +6296,27 @@
             showToast('✓ Storage & Audio Cache Cleared');
           }
         });
+      });
+    }
+
+    // Backend server URL configuration
+    const serverInput = document.getElementById('settingServerUrl');
+    const saveServerBtn = document.getElementById('btnSaveServerUrl');
+    if (serverInput) {
+      serverInput.value = localStorage.getItem('surmio_api_server') || (getApiBase() || 'http://10.0.2.2:3000');
+    }
+    if (saveServerBtn && serverInput) {
+      saveServerBtn.addEventListener('click', () => {
+        const val = serverInput.value.trim();
+        if (val) {
+          localStorage.setItem('surmio_api_server', val);
+          showToast(`✓ Server URL saved: ${val}`);
+          loadInitialCatalog();
+          loadDownloads();
+        } else {
+          localStorage.removeItem('surmio_api_server');
+          showToast('✓ Reset to default server');
+        }
       });
     }
   }

@@ -19,6 +19,14 @@ emulator_*.png
 desktop_home_redesign.png
 test_download.*
 
+# Android Build Outputs
+*.apk
+android/build/
+android/app/build/
+android/.gradle/
+android/app/src/main/assets/public/
+
 # OS
 .DS_Store
 Thumbs.db
+

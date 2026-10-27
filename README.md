@@ -69,3 +69,4 @@ Open your browser at `http://localhost:3000`.
 
 ## 📄 License
 ISC
+

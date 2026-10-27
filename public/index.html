@@ -691,6 +691,21 @@
             </div>
           </div>
 
+          <!-- Backend Server Connection for APK / Local Network -->
+          <div class="settings-card" id="settingsServerCard">
+            <h3 class="settings-card-title">Backend Connection</h3>
+            <div class="setting-row">
+              <div class="setting-text">
+                <div class="setting-name">Server API Address</div>
+                <div class="setting-desc">Required for audio downloads and streaming on mobile APK. Default: http://10.0.2.2:3000 (Android emulator) or your computer's IP on Wi-Fi (e.g. http://10.151.6.72:3000).</div>
+              </div>
+              <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:6px;">
+                <input type="text" id="settingServerUrl" class="setting-input-url" placeholder="http://10.0.2.2:3000" style="padding:7px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#f3f3ed; font-size:12px; width:220px; outline:none;">
+                <button class="btn-setting-action" id="btnSaveServerUrl">Save & Connect</button>
+              </div>
+            </div>
+          </div>
+
           <!-- App Metadata -->
           <div class="settings-card">
             <h3 class="settings-card-title">About Surmio Music Player</h3>
