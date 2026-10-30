@@ -14,8 +14,22 @@ const PORT = process.env.PORT || 3000;
 const DATA_DIR = path.join(__dirname, 'data');
 const DB_FILE = path.join(DATA_DIR, 'videos.json');
 
-app.use(express.json());
+app.use(express.json({ limit: '20mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.post('/api/save-icon', (req, res) => {
+  try {
+    const { relPath, base64 } = req.body;
+    if (!relPath || !base64) return res.status(400).json({ error: 'Missing relPath or base64' });
+    const buf = Buffer.from(base64.replace(/^data:image\/\w+;base64,/, ''), 'base64');
+    const target = path.join(__dirname, relPath);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.writeFileSync(target, buf);
+    res.json({ ok: true, target });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // Ensure data directory exists
 if (!fs.existsSync(DATA_DIR)) {

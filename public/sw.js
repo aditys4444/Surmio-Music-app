@@ -1,10 +1,11 @@
-const CACHE_NAME = 'surmio-v2.1';
+const CACHE_NAME = 'surmio-v2.3';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/style.css',
   '/surmio-premium.css',
   '/app.js',
+  '/catalog.json',
   '/manifest.json',
   '/icon.svg'
 ];
