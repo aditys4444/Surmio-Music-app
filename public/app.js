@@ -1844,8 +1844,8 @@
     // 6. Background Audio & Notification Controls (Media Session API)
     updateMediaSession(track);
 
-    // 7. Proactively preload next track in background for gapless / instant transition
-    if (state.currentQueue && state.currentQueue.length > 1) {
+    // 7. Proactively preload next track in background if remote streaming server is configured
+    if (getApiBase() && state.currentQueue && state.currentQueue.length > 1) {
       const nextIdx = (state.queueIndex + 1) % state.currentQueue.length;
       const nextTrack = state.currentQueue[nextIdx];
       if (nextTrack && nextTrack.id) {
@@ -1883,6 +1883,7 @@
               if ('mediaSession' in navigator) {
                 navigator.mediaSession.playbackState = 'playing';
               }
+              syncNativeMediaNotification(track, true);
               return;
             } catch (_) {}
           } else {
@@ -1946,6 +1947,7 @@
               navigator.mediaSession.playbackState = 'playing';
             }
             requestWakeLock();
+            syncNativeMediaNotification(track, true);
           }).catch((err) => {
             console.warn('HTML5 audio direct stream note:', err.message);
             // Fall back gracefully to YouTube player if video ID available
@@ -1995,6 +1997,7 @@
           startYtTicker();
           if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
           requestWakeLock();
+          syncNativeMediaNotification(track, true);
         } catch (e) {
           console.warn('YouTube play failed:', e);
           loadTrack(track, true);
@@ -2017,6 +2020,7 @@
         updatePlayPauseUI(true);
         if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
         requestWakeLock();
+        syncNativeMediaNotification(track, true);
       }).catch((err) => {
         console.error('Audio play error:', err.message);
         state.isPlaying = false;
@@ -2032,6 +2036,7 @@
     updatePlayPauseUI(false);
     if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
     releaseWakeLock();
+    syncNativeMediaNotification(state.currentTrack, false);
 
     if (state.currentEngine === 'youtube') {
       if (ytPlayer && ytReady && ytPlayer.pauseVideo) {
@@ -2953,24 +2958,31 @@
   }
 
   async function loadDownloads() {
-    try {
-      const res = await fetch(apiUrl('/api/downloads'));
-      if (res.ok) {
-        const data = await res.json();
-        if (data && Array.isArray(data.downloads)) {
-          state.downloads = data.downloads;
-        }
-      }
-    } catch (_) {
-      const saved = localStorage.getItem('alyvex_user_downloads');
-      if (saved) {
-        try { state.downloads = JSON.parse(saved); } catch (_) {}
-      }
+    // 1. Instantly restore offline downloads from local device storage in 0ms
+    const saved = localStorage.getItem('alyvex_user_downloads');
+    if (saved) {
+      try { state.downloads = JSON.parse(saved); } catch (_) {}
     }
     if (!state.downloads) state.downloads = [];
     updateDownloadBadges();
     renderDownloads();
     setupDownloadTabsOnce();
+
+    // 2. Optional background sync if a remote API server is explicitly configured
+    const base = getApiBase();
+    if (base) {
+      try {
+        const res = await fetch(apiUrl('/api/downloads'));
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.downloads)) {
+            state.downloads = data.downloads;
+            updateDownloadBadges();
+            if (state.currentView === 'downloads') renderDownloads();
+          }
+        }
+      } catch (_) {}
+    }
   }
 
   let dlTabsInitialized = false;
@@ -3143,7 +3155,7 @@
   };
 
   function ensureAudioContextRunning() {
-    if (eqAudioCtx && eqAudioCtx.state === 'suspended') {
+    if (state.equalizer && state.equalizer.enabled && eqAudioCtx && eqAudioCtx.state === 'suspended') {
       return eqAudioCtx.resume().catch((e) => {
         console.warn('eqAudioCtx resume notice:', e.message);
       });
@@ -5530,13 +5542,7 @@
     setupLibraryTabs();
     setupHomeDashboardControls();
     setupLibraryControls();
-    setupEqualizerUI();
-    setupSleepTimerUI();
-    initSongOptionsMenu();
     initPlaylistPickerModal();
-    setupPlaylistDetailModal();
-    setupAppearanceTheme();
-    setupSettingsPreferences();
 
     if (DOM.autoFetchCountBadge) {
       DOM.autoFetchCountBadge.textContent = `${state.allTracks.length} Songs`;
@@ -6429,6 +6435,37 @@
     } catch (e) {
       console.warn('MediaSession initialization note:', e.message);
     }
+
+    syncNativeMediaNotification(track, state.isPlaying);
+  }
+
+  function syncNativeMediaNotification(track, isPlaying, position, duration) {
+    if (window.AndroidAudioBridge && typeof window.AndroidAudioBridge.updatePlaybackState === 'function') {
+      try {
+        const curTrack = track || state.currentTrack;
+        if (!curTrack) return;
+        const title = curTrack.title || 'Surmio Music';
+        const artist = curTrack.author || curTrack.artist || 'Surmio';
+        const artwork = getHighResThumbnail(curTrack);
+        let pos = position;
+        let dur = duration;
+        if (pos === undefined || pos === null) {
+          const audio = getAudioPlayer();
+          if (audio && !isNaN(audio.currentTime)) pos = audio.currentTime;
+          else if (ytPlayer && ytReady && ytPlayer.getCurrentTime) pos = ytPlayer.getCurrentTime();
+          else pos = 0;
+        }
+        if (dur === undefined || dur === null) {
+          const audio = getAudioPlayer();
+          if (audio && audio.duration && !isNaN(audio.duration)) dur = audio.duration;
+          else if (ytPlayer && ytReady && ytPlayer.getDuration) dur = ytPlayer.getDuration();
+          else dur = curTrack.duration ? parseTimeToSeconds(curTrack.duration) : 0;
+        }
+        const durMs = Math.round((dur || 0) * 1000);
+        const posMs = Math.round((pos || 0) * 1000);
+        window.AndroidAudioBridge.updatePlaybackState(title, artist, artwork, !!isPlaying, durMs, posMs);
+      } catch (_) {}
+    }
   }
 
   function syncMediaSessionPosition() {
@@ -6457,6 +6494,8 @@
         });
       } catch (_) {}
     }
+
+    syncNativeMediaNotification(track, state.isPlaying, position, duration);
   }
 
   // Screen Wake Lock API for Foreground Stability
@@ -6775,12 +6814,17 @@
     }
   }
 
-  // Expose core navigation on window for seamless cross-component invocation and diagnostics
+  // Expose core navigation & media controls on window for seamless native notification shade controls
   window.switchView = switchView;
   window.openCineVault = openCineVault;
   window.closeCineVault = closeCineVault;
   window.loadTrack = loadTrack;
   window.downloadTrack = downloadTrack;
+  window.playMedia = playMedia;
+  window.pauseMedia = pauseMedia;
+  window.playNextTrack = playNextTrack;
+  window.playPrevTrack = playPrevTrack;
+  window.seekToTime = seekToTime;
   window.state = state;
 
   if (document.readyState === 'loading') {
