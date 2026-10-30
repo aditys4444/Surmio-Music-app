@@ -44,18 +44,29 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onPause() {
         super.onPause();
-        // Keep WebView audio thread running when user exits app to Home or switches apps
+        // Keep WebView audio thread and JavaScript timers running when user exits app to Home or switches apps
         if (bridge != null && bridge.getWebView() != null) {
             bridge.getWebView().onResume();
+            bridge.getWebView().resumeTimers();
         }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        // Prevent Android OS from pausing playback timers
+        // Prevent Android OS from pausing background audio buffering and timers
         if (bridge != null && bridge.getWebView() != null) {
             bridge.getWebView().onResume();
+            bridge.getWebView().resumeTimers();
+        }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (bridge != null && bridge.getWebView() != null) {
+            bridge.getWebView().onResume();
+            bridge.getWebView().resumeTimers();
         }
     }
 

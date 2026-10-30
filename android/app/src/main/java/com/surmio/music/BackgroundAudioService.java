@@ -51,6 +51,7 @@ public class BackgroundAudioService extends Service {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
+                .setSilent(true)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setCategory(NotificationCompat.CATEGORY_SERVICE);
 
@@ -74,6 +75,8 @@ public class BackgroundAudioService extends Service {
             );
             channel.setDescription("Maintains background audio and lockscreen playback");
             channel.setShowBadge(false);
+            channel.setSound(null, null);
+            channel.enableVibration(false);
             NotificationManager manager = getSystemService(NotificationManager.class);
             if (manager != null) {
                 manager.createNotificationChannel(channel);
@@ -97,3 +100,4 @@ public class BackgroundAudioService extends Service {
         return null;
     }
 }
+

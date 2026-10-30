@@ -1450,11 +1450,12 @@
   <!-- Dedicated HTML5 Pure Audio Engine & Background Host (Persistent across all pages & lockscreen) -->
   <audio id="audioPlayer" preload="auto" crossorigin="anonymous"></audio>
   <input id="localAudioPicker" type="file" accept="audio/*,.mp3,.m4a,.aac,.wav,.ogg,.flac,.opus" multiple hidden>
-  <div id="ytAudioHost" style="position: fixed; bottom: 0; right: 0; width: 200px; height: 200px; opacity: 0.001; pointer-events: none; z-index: -9999;">
+  <div id="ytAudioHost" style="position: fixed; bottom: 0; right: 0; width: 1px; height: 1px; opacity: 1; pointer-events: none; z-index: 1; overflow: hidden;">
     <div id="ytPlayerTarget"></div>
   </div>
 
   <script src="https://www.youtube.com/iframe_api"></script>
-  <script src="app.js?v=2.3"></script>
+  <script src="catalog.js"></script>
+  <script src="app.js?v=2.4"></script>
 </body>
 </html>
