@@ -104,6 +104,8 @@ html {
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -118,6 +120,20 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  touch-action: pan-y;
+}
+
+/* Hardware accelerated scroll containers */
+.main-content,
+.main-scrollable,
+.page-view,
+.queue-list-scroll,
+.lyrics-stream-scroll,
+.custom-scroll {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
 }
 
 button {
@@ -325,10 +341,9 @@ input, select {
   position: sticky;
   top: 0;
   z-index: 30;
-  background-color: rgba(8, 11, 18, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background-color: rgba(8, 11, 18, 0.98);
   border-bottom: 1px solid var(--border-color);
+  transform: translateZ(0);
 }
 
 .topbar-left {
@@ -378,8 +393,7 @@ input, select {
   display: flex;
   align-items: center;
   gap: 10px;
-  background-color: rgba(22, 30, 45, 0.7);
-  backdrop-filter: blur(16px);
+  background-color: var(--elevated-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: 0 16px;
@@ -1101,9 +1115,7 @@ input, select {
   font-weight: 700;
   line-height: 1;
   border-radius: 6px;
-  background: rgba(11, 14, 12, 0.8);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: rgba(11, 14, 12, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.14);
   color: #f3f3ed;
   z-index: 4;
@@ -2245,15 +2257,15 @@ input, select {
   left: 0;
   right: 0;
   height: var(--bottom-nav-height);
-  background-color: rgba(8, 11, 18, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background-color: rgba(10, 14, 22, 0.98);
   border-top: 1px solid var(--border-color);
   display: flex;
   justify-content: space-around;
   align-items: center;
   z-index: 50;
   padding-bottom: env(safe-area-inset-bottom, 0px);
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .bottom-nav-btn {
@@ -2292,18 +2304,18 @@ input, select {
   left: 12px;
   right: 12px;
   height: var(--mini-player-height);
-  background-color: rgba(22, 30, 45, 0.88);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  border: 1px solid var(--border-color);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  background-color: rgba(18, 24, 38, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
   border-radius: var(--radius-xl);
   z-index: 45;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 0 14px;
-  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .docked-player-content {
@@ -2584,14 +2596,17 @@ body.cinevault-open .cinevault-overlay {
 
 .cv-ambient-backdrop {
   position: absolute;
-  inset: -20%;
+  inset: 0;
   background-size: cover;
-  background-position: center;
-  filter: blur(80px) brightness(0.25);
-  opacity: 0.7;
+  background-position: center top;
+  opacity: 0.22;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.2) 65%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.2) 65%, transparent 100%);
   pointer-events: none;
   z-index: 0;
-  transition: background-image 0.5s ease;
+  transform: translateZ(0);
+  will-change: opacity;
+  transition: opacity 0.4s ease;
 }
 
 /* Top Header */
@@ -2618,12 +2633,29 @@ body.cinevault-open .cinevault-overlay {
 
 .now-playing-header-badge {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  color: var(--text-secondary);
+  justify-content: center;
+  text-align: center;
+  gap: 2px;
+}
+
+.np-context-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.np-context-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cv-top-right-tools {
@@ -2717,25 +2749,66 @@ body.cinevault-open .cinevault-overlay {
   object-fit: cover;
 }
 
-.music-info-block {
+.music-track-row {
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.music-info-block {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
 }
 
 .music-track-title {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--text-primary);
-  margin-bottom: 6px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.music-track-artist {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.music-track-artist {
-  font-size: 15px;
-  font-weight: 600;
+.cv-like-action-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--text-secondary);
-  margin-bottom: 12px;
+  transition: transform 0.15s ease, color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.cv-like-action-btn:active {
+  transform: scale(0.9);
+}
+
+.cv-like-action-btn.active,
+.cv-like-action-btn.liked {
+  color: #ff3366;
+}
+
+.cv-like-action-btn.active svg,
+.cv-like-action-btn.liked svg {
+  fill: #ff3366;
+  stroke: #ff3366;
 }
 
 .music-track-badges {
@@ -2931,22 +3004,21 @@ body.cinevault-open .cinevault-overlay {
   left: 0;
   right: 0;
   height: 82%;
-  background-color: rgba(17, 24, 39, 0.96);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
+  background-color: rgba(18, 24, 38, 0.98);
   border-top: 1px solid var(--border-color);
   border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
   z-index: 40;
   display: flex;
   flex-direction: column;
   padding: 16px 20px 24px 20px;
-  transform: translateY(105%);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translate3d(0, 105%, 0);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.7);
+  will-change: transform;
 }
 
 .cv-slide-drawer.open {
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
 }
 
 .drawer-drag-handle {
@@ -3385,9 +3457,7 @@ body.cinevault-open .cinevault-overlay {
 .confirm-modal-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba(0, 0, 0, 0.82);
   z-index: 120;
   display: flex;
   align-items: center;
@@ -4157,8 +4227,7 @@ body.cinevault-open .cinevault-overlay {
 .drawer-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.7);
   z-index: 90;
   display: none;
 }

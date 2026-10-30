@@ -1399,9 +1399,13 @@
 
     if (state.currentTrack) {
       state.lastWatchedTimes[state.currentTrack.id] = cur;
-      try {
-        localStorage.setItem('alyvex_resume_times', JSON.stringify(state.lastWatchedTimes));
-      } catch (_) {}
+      // Debounce persisting resume times to avoid blocking main thread on 250ms audio ticker
+      if (!state._lastResumeSaveTime || Date.now() - state._lastResumeSaveTime > 10000) {
+        state._lastResumeSaveTime = Date.now();
+        try {
+          localStorage.setItem('alyvex_resume_times', JSON.stringify(state.lastWatchedTimes));
+        } catch (_) {}
+      }
     }
 
     const pct = Math.min(100, (cur / dur) * 100);
@@ -1527,6 +1531,10 @@
     if (!track) return `${REMOTE_AUDIO_CDN}/gPpQNzQP6gE.m4a`;
     if (track.isDownloaded && track.downloadedBlobUrl) {
       return track.downloadedBlobUrl;
+    }
+    const savedDl = (state.downloads || []).find((d) => (d.trackId === track.id || d.id === track.id) && d.downloadedBlobUrl);
+    if (savedDl && savedDl.downloadedBlobUrl) {
+      return savedDl.downloadedBlobUrl;
     }
     if (track.isLocalFile && track.streamUrl) {
       return track.streamUrl;
@@ -1942,9 +1950,12 @@
       recordBehaviorPlay(track);
     }
 
-    // Whenever user plays any content, populate queue with that content & all same-type/related content
-    const related = getRelatedTracks(track, 25);
-    state.currentQueue = [track, ...related];
+    // Assemble complete rich queue with ALL available content from catalog/library
+    const pool = (state.allTracks && state.allTracks.length > 0) ? state.allTracks : EMBEDDED_CATALOG;
+    const related = getRelatedTracks(track, 50);
+    const seen = new Set([track.id, ...related.map((t) => t.id)]);
+    const remaining = (pool || []).filter((t) => !seen.has(t.id));
+    state.currentQueue = [track, ...related, ...remaining];
     state.queueIndex = 0;
     state.queueDrawerDirty = true;
 
@@ -2550,6 +2561,7 @@
   }
 
   function updateLyricsHighlight(curTime) {
+    if (!DOM.cvLyricsDrawer || !DOM.cvLyricsDrawer.classList.contains('open')) return;
     if (!state.lyrics || state.lyrics.length === 0) return;
     const hasTimestamps = state.lyrics.some((l) => typeof l.time === 'number');
     if (!hasTimestamps) return;
@@ -2681,7 +2693,6 @@
       npHeader.className = 'queue-section-header';
       npHeader.innerHTML = `
         <span class="queue-section-title">Now Playing</span>
-        <span class="queue-section-tag">Studio Hi-Fi 320kbps</span>
       `;
       frag.appendChild(npHeader);
 
@@ -2706,12 +2717,12 @@
       frag.appendChild(npCard);
     }
 
-    // 2. UPCOMING / RELATED TRACKS Section
+    // 2. UPCOMING TRACKS Section
     const upcomingCount = Math.max(0, state.currentQueue.length - 1);
     const nextHeader = document.createElement('div');
     nextHeader.className = 'queue-section-header';
     nextHeader.innerHTML = `
-      <span class="queue-section-title">Next Up • Related Tracks</span>
+      <span class="queue-section-title">Up Next</span>
       <span class="queue-section-count">${upcomingCount} tracks</span>
     `;
     frag.appendChild(nextHeader);
@@ -2972,39 +2983,25 @@
         return;
       }
 
-      // 2. Fetch real audio from authorized streaming/download endpoint (with graceful offline fallback)
+      // 2. Fetch real audio from high-speed remote CDN stream or authorized backend
       let blob = null;
-      try {
-        const streamUrl = apiUrl(`/api/stream/${encodeURIComponent(track.id)}?download=1`);
-        if (streamUrl && streamUrl.startsWith('http') && !streamUrl.includes('localhost/api/')) {
+      const audioUrl = getTrackAudioSrc(track);
+      if (audioUrl) {
+        try {
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 4000);
-          const res = await fetch(streamUrl, { signal: controller.signal });
+          const timeoutId = setTimeout(() => controller.abort(), 12000);
+          const res = await fetch(audioUrl, { signal: controller.signal });
           clearTimeout(timeoutId);
           if (res.ok) {
-            const contentType = res.headers.get('content-type') || '';
-            if (contentType.includes('audio') || contentType.includes('octet-stream')) {
-              blob = await res.blob();
-            }
+            blob = await res.blob();
           }
+        } catch (fetchErr) {
+          console.warn('Direct stream fetch fallback:', fetchErr);
         }
-      } catch (_) {}
-
-      // If standalone mobile mode or remote stream unreachable, use bundled high-fidelity asset
-      let localOfflineStream = 'media/track1.mp3';
-      if (!blob || blob.size === 0) {
-        try {
-          const localAssets = ['media/track1.mp3', 'media/track2.mp3', 'media/track3.mp3'];
-          const charSum = (track.id || 'track').split('').reduce((sum, c) => sum + c.charCodeAt(0), 0);
-          localOfflineStream = localAssets[charSum % localAssets.length];
-          const localRes = await fetch(localOfflineStream);
-          if (localRes.ok) {
-            blob = await localRes.blob();
-          }
-        } catch (_) {}
       }
 
       // If audio file blob was retrieved, trigger device download into Download/ folder
+      let localOfflineStream = audioUrl || 'media/gPpQNzQP6gE.m4a';
       if (blob && blob.size > 0) {
         try {
           const cleanFilename = (track.title || 'audio_track')
@@ -3012,9 +3009,11 @@
             .trim() || 'track';
           const blobUrl = URL.createObjectURL(blob);
           localOfflineStream = blobUrl;
+          track.downloadedBlobUrl = blobUrl;
+          track.isDownloaded = true;
           const a = document.createElement('a');
           a.href = blobUrl;
-          a.download = `${cleanFilename}.mp3`;
+          a.download = `${cleanFilename}.m4a`;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
@@ -3022,7 +3021,7 @@
       }
 
       // Register with offline downloads database
-      const sizeMb = (blob && blob.size > 0) ? (blob.size / (1024 * 1024)).toFixed(1) + ' MB' : '8.9 MB';
+      const sizeMb = (blob && blob.size > 0) ? (blob.size / (1024 * 1024)).toFixed(1) + ' MB' : '3.6 MB';
       const dlItem = {
         id: `dl-${Date.now()}`,
         trackId: track.id,
@@ -3030,12 +3029,13 @@
         author: track.author || track.artist || 'Surmio',
         thumbnail: getHighResThumbnail(track),
         duration: track.duration || '3:30',
-        format: 'Offline Audio (High-Fidelity MP3)',
+        format: 'Offline Audio (High-Fidelity M4A)',
         size: sizeMb,
         status: 'completed',
         verifiedRealAudio: true,
         date: 'Just now',
         streamUrl: localOfflineStream,
+        downloadedBlobUrl: localOfflineStream,
         isDownloaded: true,
       };
 
@@ -6845,8 +6845,6 @@
         const pull = Math.max(0, dy);
         DOM.cineVaultOverlay.style.transition = 'none';
         DOM.cineVaultOverlay.style.transform = `translate3d(0, ${pull}px, 0)`;
-        const fade = Math.max(0.35, 1 - (pull / (window.innerHeight * 1.1)));
-        DOM.cineVaultOverlay.style.opacity = `${fade}`;
       }
     }
 
@@ -6865,37 +6863,34 @@
       isDraggingY = false;
 
       if (wasDraggingY || (dy > 65 && Math.abs(dy) > Math.abs(dx) * 1.2 && dt < 500)) {
-        if (dy > 85 || (dy > 40 && dt < 300)) {
+        if (dy > 80 || (dy > 35 && dt < 300)) {
           // Smoothly animate dismissal to docked player bar
           if (DOM.cineVaultOverlay) {
-            DOM.cineVaultOverlay.style.transition = 'transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease';
+            DOM.cineVaultOverlay.style.transition = 'transform 0.22s cubic-bezier(0.16, 1, 0.3, 1)';
             DOM.cineVaultOverlay.style.transform = 'translate3d(0, 100%, 0)';
-            DOM.cineVaultOverlay.style.opacity = '0';
           }
           setTimeout(() => {
             closeCineVault();
-          }, 240);
+          }, 220);
           return;
         } else {
           // Snap smoothly back up
           if (DOM.cineVaultOverlay) {
-            DOM.cineVaultOverlay.style.transition = 'transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease';
+            DOM.cineVaultOverlay.style.transition = 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)';
             DOM.cineVaultOverlay.style.transform = 'translate3d(0, 0, 0)';
-            DOM.cineVaultOverlay.style.opacity = '1';
             setTimeout(() => {
               if (DOM.cineVaultOverlay && document.body.classList.contains('cinevault-open')) {
                 DOM.cineVaultOverlay.style.transition = '';
                 DOM.cineVaultOverlay.style.transform = '';
-                DOM.cineVaultOverlay.style.opacity = '';
               }
-            }, 230);
+            }, 210);
           }
           return;
         }
       }
 
       // Horizontal swipe to navigate songs (next / previous)
-      if (Math.abs(dx) >= 60 && Math.abs(dx) > Math.abs(dy) * 1.25 && dt < 600) {
+      if (Math.abs(dx) >= 50 && Math.abs(dx) > Math.abs(dy) * 1.2 && dt < 600) {
         if (dx < 0) playNextTrack();
         else playPrevTrack();
       }
@@ -6903,16 +6898,14 @@
 
     function handlePointerCancel(event) {
       if (isDraggingY && DOM.cineVaultOverlay) {
-        DOM.cineVaultOverlay.style.transition = 'transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease';
+        DOM.cineVaultOverlay.style.transition = 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)';
         DOM.cineVaultOverlay.style.transform = 'translate3d(0, 0, 0)';
-        DOM.cineVaultOverlay.style.opacity = '1';
         setTimeout(() => {
           if (DOM.cineVaultOverlay) {
             DOM.cineVaultOverlay.style.transition = '';
             DOM.cineVaultOverlay.style.transform = '';
-            DOM.cineVaultOverlay.style.opacity = '';
           }
-        }, 230);
+        }, 210);
       }
       try {
         if (event && event.pointerId) event.target.releasePointerCapture(event.pointerId);

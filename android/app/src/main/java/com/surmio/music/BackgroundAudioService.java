@@ -117,17 +117,7 @@ public class BackgroundAudioService extends Service {
             } catch (Exception ignored) {}
         }
 
-        // Call startForeground immediately in onCreate to strictly satisfy Android 8+ startForegroundService contract
-        try {
-            Notification notification = buildNotification();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
-            } else {
-                startForeground(NOTIFICATION_ID, notification);
-            }
-        } catch (Exception e) {
-            Log.w("SurmioAudio", "startForeground in onCreate: " + e.getMessage());
-        }
+        // Audio service initialized; startForeground will be promoted when audio plays
     }
 
     private void initMediaSession() {
@@ -193,15 +183,17 @@ public class BackgroundAudioService extends Service {
             }
         }
 
-        try {
-            Notification notification = buildNotification();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
-            } else {
-                startForeground(NOTIFICATION_ID, notification);
+        if (intent != null && intent.getAction() != null) {
+            try {
+                Notification notification = buildNotification();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+                } else {
+                    startForeground(NOTIFICATION_ID, notification);
+                }
+            } catch (Exception e) {
+                Log.w("SurmioAudio", "startForeground in onStartCommand: " + e.getMessage());
             }
-        } catch (Exception e) {
-            Log.w("SurmioAudio", "startForeground in onStartCommand: " + e.getMessage());
         }
 
         return START_STICKY;

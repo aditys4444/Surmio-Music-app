@@ -924,17 +924,15 @@
           <!-- Dynamic Ambient Glow Backdrop (Blurred Album Art) -->
           <div class="cv-ambient-backdrop" id="cvAmbientBackdrop"></div>
 
-          <!-- Top Header: Minimize, Speed Pill, Audio Quality Pill -->
+          <!-- Top Header: Minimize, Context Title, Speed Pill -->
           <div class="cv-top-header">
             <button class="cv-circle-btn" id="cvMinimizeBtn" title="Minimize to Docked Bar">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
 
             <div class="now-playing-header-badge">
-              <span class="music-playing-wave">
-                <span></span><span></span><span></span>
-              </span>
-              <span>NOW PLAYING</span>
+              <span class="np-context-label">PLAYING FROM</span>
+              <span class="np-context-title" id="cvHeaderContextTitle">Surmio Music</span>
             </div>
 
             <div class="cv-top-right-tools">
@@ -959,9 +957,14 @@
               <div class="music-artwork-card" id="cvMusicArtCard">
                 <img id="cvMusicArtImg" class="music-art-img" src="" alt="Album Art" onerror="this.src='https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&q=80'">
               </div>
-              <div class="music-info-block">
-                <h1 class="music-track-title" id="cvMusicTitle">Select a Track</h1>
-                <p class="music-track-artist" id="cvMusicArtist">Surmio</p>
+              <div class="music-track-row">
+                <div class="music-info-block">
+                  <h1 class="music-track-title" id="cvMusicTitle">Select a Track</h1>
+                  <p class="music-track-artist" id="cvMusicArtist">Surmio</p>
+                </div>
+                <button class="cv-like-action-btn" id="cvLikeBtn" title="Favorite track" aria-label="Favorite track">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
               </div>
             </div>
           </div> <!-- End cv-main-stage -->
@@ -1015,13 +1018,8 @@
                 </div>
               </div>
 
-              <!-- Auxiliary Studio Tools Bar: Exactly 5 Working, High-Value Controls -->
+              <!-- Auxiliary Utility Bar: 4 Core Streaming Controls -->
               <div class="cv-aux-tools-bar">
-                <button class="cv-aux-btn" id="cvLikeBtn" title="Save to Liked">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                  <span class="aux-label">Favorite</span>
-                </button>
-
                 <button class="cv-aux-btn" id="cvDownloadBtn" title="Download for Offline Playback" aria-label="Download track for offline playback">
                   <svg class="cv-dl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -1035,6 +1033,11 @@
                   <span class="aux-label" id="cvDownloadLabel">Download</span>
                 </button>
 
+                <button class="cv-aux-btn" id="cvLyricsBtn" title="View Time-Synced Lyrics" aria-label="View Lyrics">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                  <span class="aux-label">Lyrics</span>
+                </button>
+
                 <button class="cv-aux-btn" id="cvEqBtn" title="Sound Equalizer & Audio FX">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
                   <span class="aux-label">EQ</span>
@@ -1043,11 +1046,6 @@
                 <button class="cv-aux-btn" id="cvQueueBtn" title="Playing Queue">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
                   <span class="aux-label">Queue</span>
-                </button>
-
-                <button class="cv-aux-btn" id="cvLyricsBtn" title="View Time-Synced Lyrics" aria-label="View Lyrics">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-                  <span class="aux-label">Lyrics</span>
                 </button>
               </div>
 

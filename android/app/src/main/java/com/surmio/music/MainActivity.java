@@ -24,9 +24,14 @@ public class MainActivity extends BridgeActivity {
 
         // Keep audio streaming and media playback active in WebView
         if (bridge != null && bridge.getWebView() != null) {
+            WebView.setWebContentsDebuggingEnabled(true);
             WebView webView = bridge.getWebView();
             webView.setVerticalScrollBarEnabled(false);
             webView.setHorizontalScrollBarEnabled(false);
+            webView.setOverScrollMode(android.view.View.OVER_SCROLL_NEVER);
+            try {
+                webView.setLayerType(android.view.View.LAYER_TYPE_HARDWARE, null);
+            } catch (Exception ignored) {}
 
             WebSettings settings = webView.getSettings();
             settings.setCacheMode(WebSettings.LOAD_DEFAULT);
@@ -226,11 +231,7 @@ public class MainActivity extends BridgeActivity {
     private void startAudioService() {
         try {
             Intent serviceIntent = new Intent(this, BackgroundAudioService.class);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(serviceIntent);
-            } else {
-                startService(serviceIntent);
-            }
+            startService(serviceIntent);
         } catch (Exception e) {
             e.printStackTrace();
         }
