@@ -2455,3 +2455,387 @@ body.cinevault-open .cinevault-overlay {
   -webkit-transform: translateZ(0);
   contain: layout style;
 }
+
+/* ==========================================================================
+   STUDIO PLAYBACK SPEED SELECTOR MODAL (PREMIUM GLASS BOTTOM SHEET)
+   ========================================================================== */
+.speed-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 99999;
+  animation: surmioFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.speed-modal-card {
+  background: linear-gradient(180deg, #181b22 0%, #0e1015 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: none;
+  border-radius: 24px 24px 0 0;
+  width: 100%;
+  max-width: 480px;
+  padding: 20px 20px max(24px, env(safe-area-inset-bottom, 16px));
+  box-shadow: 0 -16px 50px rgba(0, 0, 0, 0.85), 0 0 30px rgba(168, 85, 247, 0.15);
+  animation: surmioSlideUp 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.speed-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.speed-modal-title {
+  font-size: 18px;
+  font-weight: 750;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin: 0 0 4px;
+}
+
+.speed-modal-sub {
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.speed-options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  max-height: 52vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 2px;
+}
+
+.speed-opt-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.035);
+  color: #e2e8f0;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.speed-opt-btn:active {
+  transform: scale(0.985);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.speed-opt-btn.active {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.24) 0%, rgba(217, 70, 239, 0.12) 100%);
+  border-color: rgba(168, 85, 247, 0.7);
+  box-shadow: 0 4px 18px rgba(168, 85, 247, 0.2);
+}
+
+.speed-opt-btn .speed-val {
+  font-size: 15px;
+  font-weight: 750;
+  color: #00f5d4;
+  min-width: 48px;
+  text-align: left;
+}
+
+.speed-opt-btn .speed-label {
+  flex: 1;
+  text-align: left;
+  margin-left: 12px;
+  font-size: 13.5px;
+  font-weight: 550;
+  color: #cbd5e1;
+}
+
+.speed-opt-btn .speed-check {
+  display: none;
+  color: #00f5d4;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.speed-opt-btn.active .speed-check {
+  display: block;
+}
+
+/* ==========================================================================
+   PROFESSIONAL STUDIO PLAYBACK QUEUE (SPOTIFY / APPLE MUSIC HIGH-END GRADE)
+   ========================================================================== */
+.queue-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 6px 8px;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.queue-section-tag {
+  font-size: 9.5px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(0, 245, 212, 0.12);
+  color: #00f5d4;
+  border: 1px solid rgba(0, 245, 212, 0.28);
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 650;
+}
+
+.queue-section-count {
+  font-size: 10px;
+  color: #64748b;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 600;
+}
+
+/* Distinct Luxury Now Playing Card */
+.queue-now-playing-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.22) 0%, rgba(18, 21, 32, 0.95) 100%);
+  border: 1.5px solid rgba(168, 85, 247, 0.65);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.6), 0 0 24px rgba(168, 85, 247, 0.25);
+  margin-bottom: 14px;
+}
+
+.queue-np-artwork {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.queue-np-artwork img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.queue-np-eq {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  padding-bottom: 9px;
+}
+
+.eq-wave {
+  width: 3.5px;
+  background: #00f5d4;
+  border-radius: 2px;
+  animation: eqPulse 0.9s infinite ease-in-out;
+}
+.eq-wave-1 { height: 16px; animation-delay: 0.1s; }
+.eq-wave-2 { height: 24px; animation-delay: 0.3s; }
+.eq-wave-3 { height: 12px; animation-delay: 0.2s; }
+
+@keyframes eqPulse {
+  0%, 100% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
+}
+
+.queue-np-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.queue-np-title {
+  font-size: 14.5px;
+  font-weight: 750;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.queue-np-artist {
+  font-size: 12px;
+  font-weight: 550;
+  color: #cbd5e1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.queue-np-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--accent-primary);
+  color: #14170f;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+/* Upcoming Related Track Cards */
+.queue-upcoming-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 16px;
+}
+
+.queue-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  padding: 10px 14px !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+  user-select: none !important;
+}
+
+.queue-item:hover, .queue-item:active {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border-color: rgba(168, 85, 247, 0.35) !important;
+}
+
+.queue-item.active {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(18, 21, 32, 0.95) 100%) !important;
+  border-color: rgba(168, 85, 247, 0.6) !important;
+}
+
+.queue-item-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+.queue-item-index {
+  font-size: 12px !important;
+  font-weight: 750 !important;
+  color: #64748b !important;
+  width: 22px !important;
+  text-align: center !important;
+  flex-shrink: 0 !important;
+}
+
+.queue-thumb-wrap {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+  background: #14171d !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.queue-item-thumb {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+.queue-item-meta {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+.queue-item-title {
+  font-size: 13.5px !important;
+  font-weight: 650 !important;
+  color: #f8fafc !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.queue-item-artist {
+  font-size: 11.5px !important;
+  font-weight: 500 !important;
+  color: #94a3b8 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.queue-item-right {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-shrink: 0 !important;
+}
+
+.queue-item-time {
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
+}
+
+.queue-btn-remove {
+  background: transparent !important;
+  border: none !important;
+  color: #64748b !important;
+  padding: 6px !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.15s ease !important;
+}
+
+.queue-btn-remove:hover, .queue-btn-remove:active {
+  color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.1) !important;
+}
+
+/* Animations */
+@keyframes surmioFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes surmioSlideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}

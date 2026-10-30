@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=2.5">
-  <link rel="stylesheet" href="surmio-premium.css?v=2.5">
+  <link rel="stylesheet" href="surmio-premium.css?v=2.6">
 </head>
 <body class="surmio-app alyvex-app">
 
@@ -1045,9 +1045,9 @@
                   <span class="aux-label">Queue</span>
                 </button>
 
-                <button class="cv-aux-btn" id="cvOptionsBtn" title="Song Options">
-                  <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
-                  <span class="aux-label">More</span>
+                <button class="cv-aux-btn" id="cvLyricsBtn" title="View Time-Synced Lyrics" aria-label="View Lyrics">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                  <span class="aux-label">Lyrics</span>
                 </button>
               </div>
 
@@ -1440,6 +1440,58 @@
       </div>
     </div>
 
+    <!-- ======================================================================
+         STUDIO PLAYBACK SPEED SELECTOR MODAL
+         ====================================================================== -->
+    <div class="confirm-modal-overlay speed-modal-overlay" id="surmioSpeedModal" style="display: none;">
+      <div class="speed-modal-card">
+        <div class="speed-modal-header">
+          <div class="speed-modal-title-wrap">
+            <h3 class="speed-modal-title">Playback Speed</h3>
+            <p class="speed-modal-sub">Studio tempo scaling with pristine pitch preservation</p>
+          </div>
+          <button class="modal-close-corner-btn" id="btnCloseSpeedModal" aria-label="Close">✕</button>
+        </div>
+        <div class="speed-options-grid" id="speedOptionsGrid">
+          <button class="speed-opt-btn" data-speed="0.5">
+            <span class="speed-val">0.5x</span>
+            <span class="speed-label">Half Speed</span>
+            <span class="speed-check">✓</span>
+          </button>
+          <button class="speed-opt-btn" data-speed="0.75">
+            <span class="speed-val">0.75x</span>
+            <span class="speed-label">Relaxed</span>
+            <span class="speed-check">✓</span>
+          </button>
+          <button class="speed-opt-btn active" data-speed="1.0">
+            <span class="speed-val">1.0x</span>
+            <span class="speed-label">Normal</span>
+            <span class="speed-check">✓</span>
+          </button>
+          <button class="speed-opt-btn" data-speed="1.25">
+            <span class="speed-val">1.25x</span>
+            <span class="speed-label">Brisk</span>
+            <span class="speed-check">✓</span>
+          </button>
+          <button class="speed-opt-btn" data-speed="1.5">
+            <span class="speed-val">1.5x</span>
+            <span class="speed-label">Fast</span>
+            <span class="speed-check">✓</span>
+          </button>
+          <button class="speed-opt-btn" data-speed="1.75">
+            <span class="speed-val">1.75x</span>
+            <span class="speed-label">Very Fast</span>
+            <span class="speed-check">✓</span>
+          </button>
+          <button class="speed-opt-btn" data-speed="2.0">
+            <span class="speed-val">2.0x</span>
+            <span class="speed-label">2x Speed</span>
+            <span class="speed-check">✓</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Notification Toast -->
     <div class="toast-notification" id="toastNotification">
       <span class="toast-message" id="toastMessage">Song playing</span>
@@ -1456,6 +1508,6 @@
 
   <script src="https://www.youtube.com/iframe_api"></script>
   <script src="catalog.js"></script>
-  <script src="app.js?v=2.5"></script>
+  <script src="app.js?v=2.6"></script>
 </body>
 </html>

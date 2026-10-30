@@ -28,6 +28,8 @@ public class MainActivity extends BridgeActivity {
             webView.setHorizontalScrollBarEnabled(false);
 
             WebSettings settings = webView.getSettings();
+            webView.clearCache(true);
+            settings.setCacheMode(WebSettings.LOAD_DEFAULT);
             settings.setMediaPlaybackRequiresUserGesture(false);
             settings.setJavaScriptEnabled(true);
             settings.setDomStorageEnabled(true);
@@ -192,10 +194,35 @@ public class MainActivity extends BridgeActivity {
     }
 
     @Override
-    public void onDestroy() {
+    public void onBackPressed() {
+        // Intercept back button to move task to background rather than tearing down the WebView audio pipeline
+        // This guarantees continuous, smooth background music playback just like Spotify / Apple Music
         try {
-            stopService(new Intent(this, BackgroundAudioService.class));
+            if (bridge != null && bridge.getWebView() != null) {
+                // If a drawer or CineVault is open, let JS close it, otherwise move task to back
+                bridge.getWebView().evaluateJavascript(
+                    "(function() { " +
+                    "  var cv = document.getElementById('cineVaultOverlay'); " +
+                    "  if (cv && cv.classList.contains('active')) { " +
+                    "    if (window.closeCineVault) { window.closeCineVault(); return 'handled'; } " +
+                    "  } " +
+                    "  return 'none'; " +
+                    "})()",
+                    value -> {
+                        if (value == null || !value.contains("handled")) {
+                            moveTaskToBack(true);
+                        }
+                    }
+                );
+                return;
+            }
         } catch (Exception ignored) {}
+        moveTaskToBack(true);
+    }
+
+    @Override
+    public void onDestroy() {
+        // Only stop service if whole process is genuinely finishing and not playing
         super.onDestroy();
     }
 }

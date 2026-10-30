@@ -35725,6 +35725,76 @@
         }
       ],
       "addedAt": "2026-10-30T11:13:41.504Z"
+    },
+    {
+      "id": "ymusic-aEu4neydFfs",
+      "title": "NIGHT VIBES Mashup | Night Vibes Songs | Hindi Lofi Songs To \\Chill \\Relax \\Refreshing",
+      "author": "Sudo music ",
+      "duration": "13:56",
+      "thumbnail": "https://i.ytimg.com/vi/aEu4neydFfs/hq720.jpg",
+      "streamUrl": "https://www.youtube.com/embed/aEu4neydFfs?autoplay=1&enablejsapi=1",
+      "sourceUrl": "https://www.youtube.com/watch?v=aEu4neydFfs",
+      "category": "Lofi & Chill",
+      "isYouTube": true,
+      "youtubeId": "aEu4neydFfs",
+      "hasVideo": true,
+      "views": "10M+ views",
+      "description": "Live streaming track by Sudo music ",
+      "fallbackUrl": "/media/oceans.mp4",
+      "lyrics": [
+        {
+          "time": 0,
+          "text": "♪ NIGHT VIBES Mashup | Night Vibes Songs | Hindi Lofi Songs To \\Chill \\Relax \\Refreshing ♪"
+        },
+        {
+          "time": 10,
+          "text": "Vocals: Sudo music "
+        },
+        {
+          "time": 25,
+          "text": "Streaming live on ALYVEX Unified Engine"
+        },
+        {
+          "time": 45,
+          "text": "Enjoy studio acoustic performance..."
+        }
+      ],
+      "addedAt": "2026-10-30T11:44:02.783Z"
+    },
+    {
+      "id": "ymusic-0O5OG6rdRK0",
+      "title": "yo yo honey singh mashup song / yo yo honey singh song #song #yoyohonesingh",
+      "author": "T3 badmaash",
+      "duration": "17:16",
+      "thumbnail": "https://i.ytimg.com/vi/0O5OG6rdRK0/hq720.jpg",
+      "streamUrl": "https://www.youtube.com/embed/0O5OG6rdRK0?autoplay=1&enablejsapi=1",
+      "sourceUrl": "https://www.youtube.com/watch?v=0O5OG6rdRK0",
+      "category": "Yo Yo Honey Singh",
+      "isYouTube": true,
+      "youtubeId": "0O5OG6rdRK0",
+      "hasVideo": true,
+      "views": "10M+ views",
+      "description": "Live streaming track by T3 badmaash",
+      "fallbackUrl": "/media/oceans.mp4",
+      "lyrics": [
+        {
+          "time": 0,
+          "text": "♪ yo yo honey singh mashup song / yo yo honey singh song #song #yoyohonesingh ♪"
+        },
+        {
+          "time": 10,
+          "text": "Vocals: T3 badmaash"
+        },
+        {
+          "time": 25,
+          "text": "Streaming live on ALYVEX Unified Engine"
+        },
+        {
+          "time": 45,
+          "text": "Enjoy studio acoustic performance..."
+        }
+      ],
+      "addedAt": "2026-10-30T12:03:35.588Z"
     }
   ],
   "downloadedTracks": [],
