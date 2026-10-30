@@ -116,6 +116,18 @@ public class BackgroundAudioService extends Service {
                 wakeLock.acquire(24 * 60 * 60 * 1000L); // 24 hours max
             } catch (Exception ignored) {}
         }
+
+        // Call startForeground immediately in onCreate to strictly satisfy Android 8+ startForegroundService contract
+        try {
+            Notification notification = buildNotification();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+            } else {
+                startForeground(NOTIFICATION_ID, notification);
+            }
+        } catch (Exception e) {
+            Log.w("SurmioAudio", "startForeground in onCreate: " + e.getMessage());
+        }
     }
 
     private void initMediaSession() {
@@ -181,11 +193,15 @@ public class BackgroundAudioService extends Service {
             }
         }
 
-        Notification notification = buildNotification();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
-        } else {
-            startForeground(NOTIFICATION_ID, notification);
+        try {
+            Notification notification = buildNotification();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+            } else {
+                startForeground(NOTIFICATION_ID, notification);
+            }
+        } catch (Exception e) {
+            Log.w("SurmioAudio", "startForeground in onStartCommand: " + e.getMessage());
         }
 
         return START_STICKY;
@@ -215,6 +231,15 @@ public class BackgroundAudioService extends Service {
             lastArtworkUrl = artworkUrl;
             loadArtworkAsync(artworkUrl);
         }
+
+        try {
+            Notification notification = buildNotification();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+            } else {
+                startForeground(NOTIFICATION_ID, notification);
+            }
+        } catch (Exception ignored) {}
 
         playNativeAudio(audioSrc);
     }
@@ -343,15 +368,45 @@ public class BackgroundAudioService extends Service {
         notifyUiSync("pause");
     }
 
+    public synchronized void prepareTrackMetadata(String title, String artist, String artworkUrl, String audioSrc, long durMs) {
+        if (title != null && !title.isEmpty()) currentTitle = title;
+        if (artist != null && !artist.isEmpty()) currentArtist = artist;
+        if (durMs > 0) durationMs = durMs;
+        currentAudioSrc = audioSrc;
+        if (playlist.isEmpty() && currentAudioSrc != null && !currentAudioSrc.isEmpty()) {
+            playlist.add(new TrackItem(currentTitle, currentArtist, artworkUrl, currentAudioSrc, durationMs));
+            currentIndex = 0;
+        }
+        if (artworkUrl != null && !artworkUrl.isEmpty() && !artworkUrl.equals(lastArtworkUrl)) {
+            lastArtworkUrl = artworkUrl;
+            loadArtworkAsync(artworkUrl);
+        }
+        updateMetadata();
+        updateNotification();
+    }
+
     public synchronized void resumeAudio() {
+        try {
+            Notification notification = buildNotification();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+            } else {
+                startForeground(NOTIFICATION_ID, notification);
+            }
+        } catch (Exception ignored) {}
+
         if (mediaPlayer != null) {
             try {
                 mediaPlayer.start();
                 isPlaying = true;
                 positionMs = mediaPlayer.getCurrentPosition();
             } catch (Exception ignored) {}
-        } else if (currentAudioSrc != null) {
+        } else if (currentAudioSrc != null && !currentAudioSrc.isEmpty()) {
             playNativeAudio(currentAudioSrc);
+            return;
+        } else if (playlist != null && !playlist.isEmpty()) {
+            TrackItem first = playlist.get(currentIndex >= 0 && currentIndex < playlist.size() ? currentIndex : 0);
+            playTrack(first.title, first.artist, first.artworkUrl, first.audioSrc, first.durationMs);
             return;
         }
         updatePlaybackState();

@@ -29,7 +29,6 @@ public class MainActivity extends BridgeActivity {
             webView.setHorizontalScrollBarEnabled(false);
 
             WebSettings settings = webView.getSettings();
-            webView.clearCache(true);
             settings.setCacheMode(WebSettings.LOAD_DEFAULT);
             settings.setMediaPlaybackRequiresUserGesture(false);
             settings.setJavaScriptEnabled(true);
@@ -67,6 +66,14 @@ public class MainActivity extends BridgeActivity {
                 }
 
                 @JavascriptInterface
+                public void prepareTrack(String title, String artist, String artworkUrl, String audioSrc, long durationMs) {
+                    BackgroundAudioService service = BackgroundAudioService.sInstance;
+                    if (service != null) {
+                        service.prepareTrackMetadata(title, artist, artworkUrl, audioSrc, durationMs);
+                    }
+                }
+
+                @JavascriptInterface
                 public void pause() {
                     BackgroundAudioService service = BackgroundAudioService.sInstance;
                     if (service != null) {
@@ -79,6 +86,14 @@ public class MainActivity extends BridgeActivity {
                     BackgroundAudioService service = BackgroundAudioService.sInstance;
                     if (service != null) {
                         service.resumeAudio();
+                    } else {
+                        Intent intent = new Intent(MainActivity.this, BackgroundAudioService.class);
+                        intent.setAction(BackgroundAudioService.ACTION_PLAY);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            startForegroundService(intent);
+                        } else {
+                            startService(intent);
+                        }
                     }
                 }
 

@@ -2067,7 +2067,19 @@
           navigator.mediaSession.playbackState = 'playing';
         }
       } else {
-        window.AndroidAudioBridge.pause();
+        if (typeof window.AndroidAudioBridge.prepareTrack === 'function') {
+          try {
+            window.AndroidAudioBridge.prepareTrack(
+              track.title || 'Surmio Music',
+              track.author || track.artist || 'Surmio',
+              thumb,
+              targetSrc,
+              durationMs
+            );
+          } catch (_) {}
+        } else {
+          window.AndroidAudioBridge.pause();
+        }
         state.isPlaying = false;
         state.shouldBePlaying = false;
         state.isUserPaused = true;
@@ -2123,28 +2135,43 @@
   }
 
   function playMedia() {
-    const track = state.currentTrack;
-    if (!track) {
-      if (state.allTracks.length > 0) loadTrack(state.allTracks[0], true);
-      return;
-    }
+    const track = state.currentTrack || (state.allTracks && state.allTracks[0]);
+    if (!track) return;
+    state.currentTrack = track;
     state.shouldBePlaying = true;
     state.isUserPaused = false;
     addToRecentlyPlayed(track);
     recordBehaviorPlay(track);
 
-    if (window.AndroidAudioBridge && typeof window.AndroidAudioBridge.resume === 'function') {
-      window.AndroidAudioBridge.resume();
-      state.isPlaying = true;
-      updatePlayPauseUI(true);
-      if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+    if (window.AndroidAudioBridge) {
+      let isBridgeReady = false;
+      try {
+        const raw = window.AndroidAudioBridge.getCurrentTrackJson();
+        if (raw && raw !== '{}') {
+          const info = JSON.parse(raw);
+          if (info && info.audioSrc && (info.title === track.title || info.audioSrc === getTrackAudioSrc(track))) {
+            isBridgeReady = true;
+          }
+        }
+      } catch (_) {}
+
+      if (isBridgeReady && typeof window.AndroidAudioBridge.resume === 'function') {
+        window.AndroidAudioBridge.resume();
+        state.isPlaying = true;
+        updatePlayPauseUI(true);
+        if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+      } else {
+        // Native player does not have this track prepared yet. Load and start it directly!
+        loadTrack(track, true);
+      }
       return;
     }
 
     const audio = getAudioPlayer();
     if (audio) {
-      if (!audio.src || audio.src === window.location.href || audio.src.endsWith('/')) {
-        audio.src = getTrackAudioSrc(track);
+      const targetSrc = getTrackAudioSrc(track);
+      if (!audio.src || audio.src === window.location.href || audio.src.endsWith('/') || (!audio.src.includes(targetSrc) && !targetSrc.includes(audio.src))) {
+        audio.src = targetSrc;
       }
       audio.playbackRate = state.selectedSpeed || 1.0;
       ensureAudioContextRunning();
@@ -2156,7 +2183,7 @@
         syncNativeMediaNotification(track, true);
       }).catch((err) => {
         console.warn('Audio play note:', err.message);
-        audio.src = getTrackAudioSrc(track);
+        audio.src = targetSrc;
         audio.playbackRate = state.selectedSpeed || 1.0;
         audio.play().then(() => {
           state.isPlaying = true;
@@ -2192,13 +2219,19 @@
   }
 
   function togglePlayPause() {
-    if (state.isPlaying) {
+    let isActuallyPlaying = state.isPlaying;
+    if (window.AndroidAudioBridge && typeof window.AndroidAudioBridge.isPlaying === 'function') {
+      try {
+        isActuallyPlaying = window.AndroidAudioBridge.isPlaying();
+      } catch (_) {}
+    }
+
+    if (isActuallyPlaying) {
       pauseMedia();
     } else {
       ensureAudioContextRunning();
-      if (!state.currentTrack && state.allTracks.length > 0) {
-        loadTrack(state.allTracks[0], true);
-      } else {
+      const track = state.currentTrack || (state.allTracks && state.allTracks[0]);
+      if (track) {
         playMedia();
       }
     }
@@ -5758,6 +5791,14 @@
       loadTrack(track, true);
     });
 
+    const hoverPlay = card.querySelector('.card-hover-play');
+    if (hoverPlay) {
+      hoverPlay.addEventListener('click', (e) => {
+        e.stopPropagation();
+        loadTrack(track, true);
+      });
+    }
+
     return card;
   }
 
@@ -6910,6 +6951,15 @@
     if (DOM.btnPlayPause) DOM.btnPlayPause.addEventListener('click', togglePlayPause);
     if (DOM.btnNext) DOM.btnNext.addEventListener('click', playNextTrack);
     if (DOM.btnPrev) DOM.btnPrev.addEventListener('click', playPrevTrack);
+
+    const heroPlay = document.getElementById('heroPlayBtn');
+    if (heroPlay) {
+      heroPlay.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const track = state.currentTrack || (state.allTracks && state.allTracks[0]);
+        if (track) loadTrack(track, true);
+      });
+    }
 
     if (DOM.btnRewind10) DOM.btnRewind10.addEventListener('click', () => seekRelative(-10));
     if (DOM.btnForward10) DOM.btnForward10.addEventListener('click', () => seekRelative(10));
