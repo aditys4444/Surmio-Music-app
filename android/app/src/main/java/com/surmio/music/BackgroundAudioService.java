@@ -261,49 +261,47 @@ public class BackgroundAudioService extends Service {
             }
 
             boolean sourceSet = false;
-            String clean = src.replace("https://localhost/", "")
-                              .replace("http://localhost/", "")
-                              .replace("capacitor://localhost/", "")
-                              .replace("file:///android_asset/", "")
-                              .replaceAll("^/+", "");
-
-            int mediaIdx = clean.indexOf("media/");
-            if (mediaIdx >= 0) {
-                clean = clean.substring(mediaIdx);
-            }
-            int qIdx = clean.indexOf('?');
-            if (qIdx >= 0) {
-                clean = clean.substring(0, qIdx);
-            }
-
-            if (clean.startsWith("media/")) {
-                String assetPath = "public/" + clean;
-                try {
-                    AssetFileDescriptor afd = getAssets().openFd(assetPath);
-                    mediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-                    afd.close();
-                    sourceSet = true;
-                } catch (Exception e) {
-                    // Fallback: extract to cache directory for seamless playback
-                    File cached = new File(getCacheDir(), clean.replace('/', '_'));
-                    if (!cached.exists() || cached.length() == 0) {
-                        try (InputStream in = getAssets().open(assetPath);
-                             FileOutputStream out = new FileOutputStream(cached)) {
-                            byte[] buf = new byte[32768];
-                            int r;
-                            while ((r = in.read(buf)) != -1) out.write(buf, 0, r);
-                        }
-                    }
-                    mediaPlayer.setDataSource(cached.getAbsolutePath());
-                    sourceSet = true;
-                }
-            } else if (src.startsWith("http://") || src.startsWith("https://")) {
+            if (src.startsWith("http://") || src.startsWith("https://")) {
                 mediaPlayer.setDataSource(getApplicationContext(), Uri.parse(src));
                 sourceSet = true;
             } else {
-                // Local disk file
-                mediaPlayer.setDataSource(src);
-                sourceSet = true;
+                String clean = src.replace("https://localhost/", "")
+                                  .replace("http://localhost/", "")
+                                  .replace("capacitor://localhost/", "")
+                                  .replace("file:///android_asset/", "")
+                                  .replaceAll("^/+", "");
+
+                int mediaIdx = clean.indexOf("media/");
+                if (mediaIdx >= 0) {
+                    clean = clean.substring(mediaIdx);
+                }
+                int qIdx = clean.indexOf('?');
+                if (qIdx >= 0) {
+                    clean = clean.substring(0, qIdx);
+                }
+
+                if (clean.startsWith("media/")) {
+                    String assetPath = "public/" + clean;
+                    try {
+                        AssetFileDescriptor afd = getAssets().openFd(assetPath);
+                        mediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+                        afd.close();
+                        sourceSet = true;
+                    } catch (Exception e) {
+                        // Not bundled in APK assets; stream directly from high-speed remote CDN (lightweight APK mode)
+                        String remoteUrl = "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/" + clean;
+                        try {
+                            mediaPlayer.setDataSource(getApplicationContext(), Uri.parse(remoteUrl));
+                            sourceSet = true;
+                        } catch (Exception netErr) {
+                            Log.w("SurmioAudio", "Error setting remote data source: " + netErr.getMessage());
+                        }
+                    }
+                } else {
+                    // Local disk file
+                    mediaPlayer.setDataSource(src);
+                    sourceSet = true;
+                }
             }
 
             if (sourceSet) {

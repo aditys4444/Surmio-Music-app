@@ -13,8 +13,16 @@ android {
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
              // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
-            ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+            ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~:media:*.m4a'
             noCompress "m4a", "mp3", "ogg", "aac", "wav", "flac"
+        }
+    }
+    sourceSets {
+        main {
+            assets {
+                exclude '**/media/**'
+                exclude '**/*.m4a'
+            }
         }
     }
     buildTypes {
@@ -22,6 +30,13 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+}
+
+// Automatically purge bundled media assets from APK packaging to guarantee lightweight (~7.7MB) streaming APK
+tasks.matching { it.name.contains("Assets") || it.name.contains("Package") }.configureEach {
+    doFirst {
+        delete "${projectDir}/src/main/assets/public/media"
     }
 }
 

@@ -1521,8 +1521,10 @@
     bollywood: ['gPpQNzQP6gE', 'Y9ozt29tzgs', 'TyMUY2CDrjc', 'fDiEUxt9l7c', 'JpSFL_bHtBA', 'LB5DhtD59fA', '1XFq4tgqJ5g', '_3GKsIFtEoE', '403FGqa-Uv8', 'LVo7lFdwb0M', 'pxCWiYFkvTg']
   };
 
+  const REMOTE_AUDIO_CDN = 'https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media';
+
   function getTrackAudioSrc(track) {
-    if (!track) return 'media/gPpQNzQP6gE.m4a';
+    if (!track) return `${REMOTE_AUDIO_CDN}/gPpQNzQP6gE.m4a`;
     if (track.isDownloaded && track.downloadedBlobUrl) {
       return track.downloadedBlobUrl;
     }
@@ -1531,20 +1533,20 @@
     }
     const cleanId = track.youtubeId || (track.id && track.id.startsWith('ymusic-') ? track.id.replace('ymusic-', '') : (/^[a-zA-Z0-9_-]{11}$/.test(track.id) ? track.id : null));
 
-    // 1. Direct match with genuine bundled studio track (zero latency, offline & background guaranteed)
-    if (cleanId && BUNDLED_AUDIO_IDS.has(cleanId)) {
-      return `media/${cleanId}.m4a`;
-    }
-
-    if (track.streamUrl && (track.streamUrl.startsWith('media/') || track.streamUrl.startsWith('/media/') || track.streamUrl.startsWith('blob:'))) {
-      return track.streamUrl.startsWith('/') ? track.streamUrl.slice(1) : track.streamUrl;
-    }
-
-    // 2. If running with active backend server, route to backend stream
+    // 1. If running with active backend server, route to backend stream
     const apiBase = getApiBase() || state.detectedServerBase;
     if (apiBase) {
       const streamId = track.id || cleanId || 'gPpQNzQP6gE';
       return `${apiBase.replace(/\/+$/, '')}/api/stream/${encodeURIComponent(streamId)}`;
+    }
+
+    // 2. Direct match with verified studio track on high-speed remote CDN (lightweight 8MB APK)
+    if (cleanId && BUNDLED_AUDIO_IDS.has(cleanId)) {
+      return `${REMOTE_AUDIO_CDN}/${cleanId}.m4a`;
+    }
+
+    if (track.streamUrl && !track.streamUrl.includes('youtube.com') && !track.streamUrl.includes('youtu.be') && (track.streamUrl.endsWith('.m4a') || track.streamUrl.endsWith('.mp3') || track.streamUrl.startsWith('blob:') || track.streamUrl.includes('/api/stream/'))) {
+      return track.streamUrl;
     }
 
     // 3. Smart Category Mapping to genuine full-length real song in the exact same genre
@@ -1564,7 +1566,7 @@
     const s = String(track.id || track.title || '1');
     for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
     const mappedId = pool[Math.abs(h) % pool.length];
-    return `media/${mappedId}.m4a`;
+    return `${REMOTE_AUDIO_CDN}/${mappedId}.m4a`;
   }
 
   // ==========================================
