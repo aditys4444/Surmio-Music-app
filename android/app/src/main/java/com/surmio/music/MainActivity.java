@@ -24,8 +24,6 @@ public class MainActivity extends BridgeActivity {
         // Keep audio streaming and media playback active in WebView
         if (bridge != null && bridge.getWebView() != null) {
             WebView webView = bridge.getWebView();
-            webView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
             webView.setVerticalScrollBarEnabled(false);
             webView.setHorizontalScrollBarEnabled(false);
 
