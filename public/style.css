@@ -909,6 +909,7 @@ input, select {
 
 .spotify-shelf {
   margin-bottom: 36px;
+  contain: layout style;
 }
 
 .shelf-header {

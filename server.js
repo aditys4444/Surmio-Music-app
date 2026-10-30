@@ -354,13 +354,123 @@ app.get('/api/downloads', (req, res) => {
   res.json({ success: true, downloads: db.downloadedTracks || [] });
 });
 
+const AUDIO_CACHE_DIR = path.join(__dirname, '.cache', 'audio');
+if (!fs.existsSync(AUDIO_CACHE_DIR)) {
+  fs.mkdirSync(AUDIO_CACHE_DIR, { recursive: true });
+}
+const activeAudioDownloads = new Map();
+
+function streamAudioFile(filePath, req, res, options = {}) {
+  const stat = fs.statSync(filePath);
+  const fileSize = stat.size;
+  const range = req.headers.range;
+  const ext = path.extname(filePath).toLowerCase();
+  const contentType = (ext === '.mp4' || ext === '.m4a') ? 'audio/mp4' : ext === '.wav' ? 'audio/wav' : ext === '.ogg' ? 'audio/ogg' : 'audio/mpeg';
+  const cleanTitle = (options.title || 'track').replace(/[/\\?%*:|"<>]/g, '_').trim() || 'track';
+  const safeAsciiTitle = cleanTitle.replace(/[^\x20-\x7E]/g, '_').replace(/["\\]/g, '') || 'track';
+  const encodedUtf8Title = encodeURIComponent(cleanTitle);
+  const isDownload = options.isDownload || false;
+  const disposition = isDownload
+    ? `attachment; filename="${safeAsciiTitle}.mp3"; filename*=UTF-8''${encodedUtf8Title}.mp3`
+    : 'inline';
+
+  res.setHeader('Accept-Ranges', 'bytes');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  if (range) {
+    const parts = range.replace(/bytes=/, '').split('-');
+    const start = parseInt(parts[0], 10);
+    const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+    if (start >= fileSize) {
+      res.status(416).setHeader('Content-Range', `bytes */${fileSize}`);
+      return res.end();
+    }
+    const chunksize = end - start + 1;
+    const file = fs.createReadStream(filePath, { start, end });
+    res.writeHead(206, {
+      'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+      'Accept-Ranges': 'bytes',
+      'Content-Length': chunksize,
+      'Content-Type': contentType,
+      'Content-Disposition': disposition,
+    });
+    file.pipe(res);
+  } else {
+    res.writeHead(200, {
+      'Content-Length': fileSize,
+      'Content-Type': contentType,
+      'Accept-Ranges': 'bytes',
+      'Content-Disposition': disposition,
+    });
+    fs.createReadStream(filePath).pipe(res);
+  }
+}
+
+// POST /api/preload/:id - Proactively warm up audio cache for next track
+app.post('/api/preload/:id', (req, res) => {
+  const { id } = req.params;
+  const db = loadDatabase();
+  const track = (db.videos || []).find((v) => v.id === id || v.youtubeId === id);
+  let videoId = track?.youtubeId || (id.startsWith('ymusic-') ? id.replace('ymusic-', '') : (id.length === 11 ? id : null));
+  if (!videoId && track?.sourceUrl) {
+    const m = track.sourceUrl.match(/(?:v=|\/embed\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    if (m) videoId = m[1];
+  }
+
+  if (!videoId) return res.json({ success: false, message: 'Not a YouTube track' });
+
+  const cachedAudioPath = path.join(AUDIO_CACHE_DIR, `${videoId}.m4a`);
+  if (fs.existsSync(cachedAudioPath) && fs.statSync(cachedAudioPath).size > 50000) {
+    return res.json({ success: true, cached: true });
+  }
+
+  if (activeAudioDownloads.has(videoId)) {
+    return res.json({ success: true, downloading: true });
+  }
+
+  // Start background warm-up
+  activeAudioDownloads.set(videoId, true);
+  const partAudioPath = path.join(AUDIO_CACHE_DIR, `${videoId}.m4a.part`);
+  const ytUrl = `https://www.youtube.com/watch?v=${videoId}`;
+  try {
+    const ytdl = new Ytdl();
+    const stream = ytdl.download(ytUrl, { filter: (f) => f.hasAudio && !f.hasVideo, quality: 'highestaudio' });
+    const writeStream = fs.createWriteStream(partAudioPath);
+
+    stream.pipe(writeStream);
+    writeStream.on('finish', () => {
+      activeAudioDownloads.delete(videoId);
+      try {
+        if (fs.existsSync(partAudioPath) && fs.statSync(partAudioPath).size > 50000) {
+          fs.renameSync(partAudioPath, cachedAudioPath);
+        }
+      } catch (_) {}
+    });
+    writeStream.on('error', () => {
+      activeAudioDownloads.delete(videoId);
+      try { if (fs.existsSync(partAudioPath)) fs.unlinkSync(partAudioPath); } catch (_) {}
+    });
+    stream.on('error', () => {
+      activeAudioDownloads.delete(videoId);
+      try { if (fs.existsSync(partAudioPath)) fs.unlinkSync(partAudioPath); } catch (_) {}
+    });
+  } catch (err) {
+    activeAudioDownloads.delete(videoId);
+  }
+
+  return res.json({ success: true, started: true });
+});
+
 // GET /api/stream/:id - Stream Router for verified audio assets with HTTP 206 Range support
 app.get('/api/stream/:id', async (req, res) => {
   const { id } = req.params;
   const db = loadDatabase();
   const track = (db.videos || []).find((v) => v.id === id || v.youtubeId === id);
 
-  // Check for genuine local file path
+  const isDownload = req.query.download === '1' || req.query.download === 'true';
+  const cleanTitle = (track && track.title ? track.title : 'track').replace(/[/\\?%*:|"<>]/g, '_').trim() || 'track';
+
+  // 1. Check for genuine local file path
   let genuineFilePath = null;
   if (track && track.localPath && fs.existsSync(track.localPath)) {
     genuineFilePath = track.localPath;
@@ -370,52 +480,11 @@ app.get('/api/stream/:id', async (req, res) => {
     genuineFilePath = path.join(__dirname, 'public', 'media', id);
   }
 
-  const isDownload = req.query.download === '1' || req.query.download === 'true';
-  const cleanTitle = (track && track.title ? track.title : 'track').replace(/[/\\?%*:|"<>]/g, '_').trim() || 'track';
-  const safeAsciiTitle = cleanTitle.replace(/[^\x20-\x7E]/g, '_').replace(/["\\]/g, '') || 'track';
-  const encodedUtf8Title = encodeURIComponent(cleanTitle);
-
   if (genuineFilePath) {
-    const stat = fs.statSync(genuineFilePath);
-    const fileSize = stat.size;
-    const range = req.headers.range;
-    const ext = path.extname(genuineFilePath).toLowerCase();
-    const contentType = ext === '.mp4' ? 'video/mp4' : ext === '.wav' ? 'audio/wav' : ext === '.ogg' ? 'audio/ogg' : 'audio/mpeg';
-    const disposition = isDownload
-      ? `attachment; filename="${safeAsciiTitle}.mp3"; filename*=UTF-8''${encodedUtf8Title}.mp3`
-      : 'inline';
-
-    if (range) {
-      const parts = range.replace(/bytes=/, '').split('-');
-      const start = parseInt(parts[0], 10);
-      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
-      const chunksize = end - start + 1;
-      const file = fs.createReadStream(genuineFilePath, { start, end });
-      const head = {
-        'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-        'Accept-Ranges': 'bytes',
-        'Content-Length': chunksize,
-        'Content-Type': contentType,
-        'Content-Disposition': disposition,
-        'Access-Control-Allow-Origin': '*',
-      };
-      res.writeHead(206, head);
-      file.pipe(res);
-    } else {
-      const head = {
-        'Content-Length': fileSize,
-        'Content-Type': contentType,
-        'Accept-Ranges': 'bytes',
-        'Content-Disposition': disposition,
-        'Access-Control-Allow-Origin': '*',
-      };
-      res.writeHead(200, head);
-      fs.createReadStream(genuineFilePath).pipe(res);
-    }
-    return;
+    return streamAudioFile(genuineFilePath, req, res, { title: cleanTitle, isDownload });
   }
 
-  // Handle YouTube streams with real live audio extraction via @distube/ytdl-core
+  // 2. Handle YouTube streams with real live audio extraction and local caching
   let videoId = null;
   if (track && track.youtubeId) {
     videoId = track.youtubeId;
@@ -431,15 +500,31 @@ app.get('/api/stream/:id', async (req, res) => {
   }
 
   if (videoId) {
+    const cachedAudioPath = path.join(AUDIO_CACHE_DIR, `${videoId}.m4a`);
+    const partAudioPath = path.join(AUDIO_CACHE_DIR, `${videoId}.m4a.part`);
+
+    // If already cached on disk, serve immediately with full Range (seeking) support
+    if (fs.existsSync(cachedAudioPath)) {
+      try {
+        const sz = fs.statSync(cachedAudioPath).size;
+        if (sz > 50000) {
+          return streamAudioFile(cachedAudioPath, req, res, { title: cleanTitle, isDownload });
+        }
+      } catch (_) {}
+    }
+
     try {
       const ytdl = new Ytdl();
       const ytUrl = `https://www.youtube.com/watch?v=${videoId}`;
+      const safeAsciiTitle = cleanTitle.replace(/[^\x20-\x7E]/g, '_').replace(/["\\]/g, '') || 'track';
+      const encodedUtf8Title = encodeURIComponent(cleanTitle);
       const disposition = isDownload
         ? `attachment; filename="${safeAsciiTitle}.mp3"; filename*=UTF-8''${encodedUtf8Title}.mp3`
         : 'inline';
 
       res.setHeader('Content-Type', 'audio/mp4');
       res.setHeader('Content-Disposition', disposition);
+      res.setHeader('Accept-Ranges', 'bytes');
       res.setHeader('Access-Control-Allow-Origin', '*');
 
       const audioStream = ytdl.download(ytUrl, {
@@ -447,8 +532,31 @@ app.get('/api/stream/:id', async (req, res) => {
         quality: 'highestaudio',
       });
 
+      // Tee to disk cache if not already caching
+      if (!isDownload && !fs.existsSync(cachedAudioPath) && !activeAudioDownloads.has(videoId)) {
+        activeAudioDownloads.set(videoId, true);
+        const writeStream = fs.createWriteStream(partAudioPath);
+        audioStream.pipe(writeStream);
+
+        writeStream.on('finish', () => {
+          activeAudioDownloads.delete(videoId);
+          try {
+            if (fs.existsSync(partAudioPath) && fs.statSync(partAudioPath).size > 50000) {
+              fs.renameSync(partAudioPath, cachedAudioPath);
+            }
+          } catch (_) {}
+        });
+
+        writeStream.on('error', () => {
+          activeAudioDownloads.delete(videoId);
+          try { if (fs.existsSync(partAudioPath)) fs.unlinkSync(partAudioPath); } catch (_) {}
+        });
+      }
+
       audioStream.on('error', (err) => {
         console.error('YTDL stream error:', err.message);
+        activeAudioDownloads.delete(videoId);
+        try { if (fs.existsSync(partAudioPath)) fs.unlinkSync(partAudioPath); } catch (_) {}
         if (!res.headersSent) {
           res.status(500).json({
             success: false,
@@ -463,6 +571,7 @@ app.get('/api/stream/:id', async (req, res) => {
       return;
     } catch (ytdlErr) {
       console.error('YTDL init error:', ytdlErr.message);
+      activeAudioDownloads.delete(videoId);
       return res.status(500).json({
         success: false,
         code: 'YTDL_INIT_ERROR',

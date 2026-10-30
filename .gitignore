@@ -18,6 +18,7 @@ yarn-error.log*
 emulator_*.png
 desktop_home_redesign.png
 test_download.*
+.cache/
 
 # Android Build Outputs
 *.apk

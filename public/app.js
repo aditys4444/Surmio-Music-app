@@ -1346,14 +1346,15 @@
     return null;
   }
 
-  function getHighResThumbnail(trackOrUrl, youtubeId) {
-    if (!trackOrUrl && !youtubeId) return DEFAULT_THUMB;
+  function getHighResThumbnail(trackOrUrl, isLarge = false) {
+    if (!trackOrUrl) return DEFAULT_THUMB;
     let url = typeof trackOrUrl === 'string' ? trackOrUrl : (trackOrUrl ? trackOrUrl.thumbnail : '');
-    const yId = youtubeId || (trackOrUrl && typeof trackOrUrl === 'object' ? getYouTubeIdFromTrack(trackOrUrl) : null);
+    const yId = (trackOrUrl && typeof trackOrUrl === 'object') ? getYouTubeIdFromTrack(trackOrUrl) : null;
+    const targetFile = isLarge ? 'hq720.jpg' : 'mqdefault.jpg';
 
-    // If we have a valid YouTube ID, prioritize high-resolution YouTube thumbnails (hq720.jpg)
+    // Prioritize clean YouTube direct thumbnails with resolution adapted to display context
     if (yId && /^[a-zA-Z0-9_-]{11}$/.test(yId)) {
-      return `https://i.ytimg.com/vi/${yId}/hq720.jpg`;
+      return `https://i.ytimg.com/vi/${yId}/${targetFile}`;
     }
 
     if (!url || typeof url !== 'string') return DEFAULT_THUMB;
@@ -1361,18 +1362,18 @@
     // Strip downsampling query parameters (e.g. ?sqp=...)
     url = url.split('?')[0];
 
-    // Upgrade low-res YouTube thumbnail variants to 720p
     if (url.includes('i.ytimg.com') || url.includes('img.youtube.com')) {
       const match = url.match(/\/vi\/([a-zA-Z0-9_-]{11})\//);
       if (match) {
-        return `https://i.ytimg.com/vi/${match[1]}/hq720.jpg`;
+        return `https://i.ytimg.com/vi/${match[1]}/${targetFile}`;
       }
-      return url.replace(/\/(default|mqdefault|sddefault)\.jpg/i, '/hq720.jpg');
+      return url.replace(/\/(default|mqdefault|sddefault|hq720)\.jpg/i, `/${targetFile}`);
     }
 
-    // Google / YouTube user content thumbnail sizing (e.g. =w120-h120 -> =w800-h800-l90-rj)
     if (url.includes('googleusercontent.com') || url.includes('ggpht.com')) {
-      return url.replace(/=w\d+-h\d+[^=]*$/, '=w800-h800-l90-rj').replace(/=s\d+[^=]*$/, '=s800-c');
+      return isLarge
+        ? url.replace(/=w\d+-h\d+[^=]*$/, '=w800-h800-l90-rj').replace(/=s\d+[^=]*$/, '=s800-c')
+        : url.replace(/=w\d+-h\d+[^=]*$/, '=w320-h320-l90-rj').replace(/=s\d+[^=]*$/, '=s320-c');
     }
 
     return url;
@@ -1755,10 +1756,11 @@
       state.queueIndex = 0;
     }
 
-    const thumb = getHighResThumbnail(track);
+    const thumb = getHighResThumbnail(track, true);
 
     // 1. Update Docked Bottom Player Bar
     if (DOM.dockedThumb) {
+      DOM.dockedThumb.decoding = 'async';
       DOM.dockedThumb.src = thumb;
       DOM.dockedThumb.onerror = () => {
         if (DOM.dockedThumb.src && DOM.dockedThumb.src.includes('hq720.jpg')) {
@@ -1776,6 +1778,7 @@
     // 2. Update Ambient Backdrop & Music Viewport
     if (DOM.cvAmbientBackdrop) DOM.cvAmbientBackdrop.style.backgroundImage = `url("${thumb}")`;
     if (DOM.cvMusicArtImg) {
+      DOM.cvMusicArtImg.decoding = 'async';
       DOM.cvMusicArtImg.src = thumb;
       DOM.cvMusicArtImg.onerror = () => {
         if (DOM.cvMusicArtImg.src && DOM.cvMusicArtImg.src.includes('hq720.jpg')) {
@@ -1788,7 +1791,7 @@
     if (DOM.cvMusicTitle) DOM.cvMusicTitle.textContent = track.title;
     if (DOM.cvMusicArtist) DOM.cvMusicArtist.textContent = track.author || 'Surmio';
     if (DOM.cvMusicCategoryBadge) DOM.cvMusicCategoryBadge.textContent = track.category || 'Music';
-    if (DOM.cvMusicHiResBadge) DOM.cvMusicHiResBadge.textContent = track.isLocalFile ? 'Local Lossless' : (track.isYouTube ? 'Live Stream • 320kbps' : 'Studio Hi-Fi');
+    if (DOM.cvMusicHiResBadge) DOM.cvMusicHiResBadge.textContent = track.isLocalFile ? 'Local Lossless' : 'Studio Hi-Fi • 320kbps';
 
     // Synchronize Top Spotlight Hero Banner with Currently Playing Track
     updateHeroBanner(track);
@@ -1801,20 +1804,32 @@
     // 3b. Sync Download Status (Clear checkmark unless genuinely downloaded)
     updateDownloadBtnState(track);
 
-    // 4. Populate Lyrics
+    // 4. Populate Lyrics (Only render DOM if lyrics drawer is actually open)
     state.lyrics = track.lyrics || [
       { time: 0, text: `♪ ${track.title} ♪` },
-      { time: 10, text: `Vocals & Performance: ${track.author || 'Artist'}` },
-      { time: 25, text: 'Lyrics are not available for this track.' },
+      { time: 10, text: `Artist: ${track.author || 'Surmio'}` },
+      { time: 25, text: 'Instrumental or studio acoustics' },
     ];
-    renderLyricsDrawer();
+    if (DOM.cvLyricsDrawer && DOM.cvLyricsDrawer.classList.contains('open')) {
+      renderLyricsDrawer();
+    }
 
-    // 5. Update Queue Drawer
-    renderQueueDrawer();
+    // 5. Update Queue Drawer (Fast active-indicator sync; avoids destroying/recreating 1000+ DOM nodes)
+    renderQueueDrawer(false);
 
     // 6. Background Audio & Notification Controls (Media Session API)
     updateMediaSession(track);
 
+    // 7. Proactively preload next track in background for gapless / instant transition
+    if (state.currentQueue && state.currentQueue.length > 1) {
+      const nextIdx = (state.queueIndex + 1) % state.currentQueue.length;
+      const nextTrack = state.currentQueue[nextIdx];
+      if (nextTrack && nextTrack.id) {
+        try {
+          fetch(apiUrl(`/api/preload/${encodeURIComponent(nextTrack.id)}`), { method: 'POST' }).catch(() => {});
+        } catch (_) {}
+      }
+    }
 
     // 8. Unified High-Fidelity HTML5 Audio Playback Engine (True Background & Lockscreen Playback)
     state.fallbackAttempt = 0;
@@ -2189,6 +2204,11 @@
     if (!isOpen) {
       drawerEl.classList.add('open');
       if (triggerBtn) triggerBtn.classList.add('active');
+      if (drawerEl === DOM.cvQueueDrawer) {
+        renderQueueDrawer(true);
+      } else if (drawerEl === DOM.cvLyricsDrawer) {
+        renderLyricsDrawer();
+      }
     }
   }
 
@@ -2298,12 +2318,66 @@
   // Queue Management (Display, Reorder, Remove, Shuffle, Clear)
   // ==========================================
 
-  function renderQueueDrawer() {
+  let queueDelegationSetup = false;
+  function setupQueueDelegation() {
+    if (queueDelegationSetup || !DOM.cvQueueContent) return;
+    queueDelegationSetup = true;
+
+    DOM.cvQueueContent.addEventListener('click', (e) => {
+      const stepUp = e.target.closest('.btn-queue-step.move-up');
+      if (stepUp) {
+        e.stopPropagation();
+        const card = stepUp.closest('.queue-item');
+        const idx = card ? parseInt(card.getAttribute('data-index'), 10) : -1;
+        if (!isNaN(idx) && idx > 0) moveQueueTrack(idx, idx - 1);
+        return;
+      }
+
+      const stepDown = e.target.closest('.btn-queue-step.move-down');
+      if (stepDown) {
+        e.stopPropagation();
+        const card = stepDown.closest('.queue-item');
+        const idx = card ? parseInt(card.getAttribute('data-index'), 10) : -1;
+        if (!isNaN(idx) && idx < state.currentQueue.length - 1) moveQueueTrack(idx, idx + 1);
+        return;
+      }
+
+      const removeBtn = e.target.closest('.btn-queue-action.remove');
+      if (removeBtn) {
+        e.stopPropagation();
+        const card = removeBtn.closest('.queue-item');
+        const idx = card ? parseInt(card.getAttribute('data-index'), 10) : -1;
+        if (!isNaN(idx)) removeFromQueue(idx);
+        return;
+      }
+
+      const card = e.target.closest('.queue-item');
+      if (card) {
+        const idx = parseInt(card.getAttribute('data-index'), 10);
+        if (!isNaN(idx) && state.currentQueue[idx]) {
+          state.queueIndex = idx;
+          loadTrack(state.currentQueue[idx], true);
+          renderQueueDrawer(false);
+        }
+      }
+    });
+  }
+
+  function renderQueueDrawer(forceRebuild = false) {
     if (!DOM.cvQueueContent) return;
-    DOM.cvQueueContent.innerHTML = '';
+    const isDrawerOpen = DOM.cvQueueDrawer && DOM.cvQueueDrawer.classList.contains('open');
+
     if (DOM.queueDrawerTitle) {
       DOM.queueDrawerTitle.innerHTML = `Playing Queue <span class="queue-count-pill">${state.currentQueue.length}</span>`;
     }
+
+    // 1. If drawer is closed and this isn't a forced rebuild, do zero DOM work (0ms song skip!)
+    if (!isDrawerOpen && !forceRebuild) {
+      state.queueDrawerDirty = true;
+      return;
+    }
+
+    setupQueueDelegation();
 
     if (state.currentQueue.length === 0) {
       DOM.cvQueueContent.innerHTML = `
@@ -2322,11 +2396,73 @@
           <p class="queue-empty-sub">Tap any track or "Add to Queue" to begin continuous studio playback.</p>
         </div>
       `;
+      state.queueDrawerDirty = false;
       return;
     }
 
-    state.currentQueue.forEach((track, idx) => {
-      const isCur = state.currentTrack && state.currentTrack.id === track.id;
+    // 2. Fast Path: If drawer is already rendered with current cards, update active class in place without rebuilding (<0.2ms)
+    const existingCards = DOM.cvQueueContent.querySelectorAll('.queue-item');
+    if (!forceRebuild && !state.queueDrawerDirty && existingCards.length > 0) {
+      let targetFound = false;
+      existingCards.forEach((c) => {
+        const idx = parseInt(c.getAttribute('data-index'), 10);
+        const isCur = idx === state.queueIndex;
+        if (isCur) targetFound = true;
+        c.classList.toggle('active', isCur);
+        c.classList.toggle('playing', isCur);
+
+        const slot = c.querySelector('.queue-item-left .queue-playing-indicator, .queue-item-left .queue-item-index');
+        if (slot) {
+          if (isCur && !slot.classList.contains('queue-playing-indicator')) {
+            slot.outerHTML = `
+              <div class="queue-playing-indicator" title="Now Playing">
+                <span class="bar bar-1"></span>
+                <span class="bar bar-2"></span>
+                <span class="bar bar-3"></span>
+              </div>`;
+          } else if (!isCur && slot.classList.contains('queue-playing-indicator')) {
+            slot.outerHTML = `<span class="queue-item-index">${idx + 1}</span>`;
+          }
+        }
+      });
+
+      if (targetFound) {
+        const activeItem = DOM.cvQueueContent.querySelector('.queue-item.active');
+        if (activeItem) {
+          activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        return;
+      }
+    }
+
+    // 3. Windowed Rebuild Path: Render window around current index using a DocumentFragment
+    state.queueDrawerDirty = false;
+    DOM.cvQueueContent.innerHTML = '';
+
+    const maxItems = 80;
+    let startIdx = 0;
+    let endIdx = state.currentQueue.length;
+    if (state.currentQueue.length > maxItems) {
+      startIdx = Math.max(0, state.queueIndex - 20);
+      endIdx = Math.min(state.currentQueue.length, startIdx + maxItems);
+      if (endIdx - startIdx < maxItems) {
+        startIdx = Math.max(0, endIdx - maxItems);
+      }
+    }
+
+    const frag = document.createDocumentFragment();
+
+    if (startIdx > 0) {
+      const topInfo = document.createElement('div');
+      topInfo.className = 'queue-window-indicator';
+      topInfo.style.cssText = 'padding: 8px 16px; font-size: 11px; color: var(--text-muted, #8e909a); text-align: center;';
+      topInfo.textContent = `+${startIdx} previous tracks in queue`;
+      frag.appendChild(topInfo);
+    }
+
+    for (let idx = startIdx; idx < endIdx; idx++) {
+      const track = state.currentQueue[idx];
+      const isCur = idx === state.queueIndex;
       const card = document.createElement('div');
       card.className = `queue-item ${isCur ? 'active playing' : ''}`;
       card.setAttribute('data-index', idx);
@@ -2344,7 +2480,7 @@
         <div class="queue-item-left">
           ${statusIndicator}
           <div class="queue-thumb-wrap">
-            <img class="queue-item-thumb" src="${thumb}" alt="Art" loading="lazy" onerror="window.handleThumbError ? window.handleThumbError(this) : (this.src='${DEFAULT_THUMB}')">
+            <img class="queue-item-thumb" src="${thumb}" alt="Art" loading="lazy" decoding="async" onerror="window.handleThumbError ? window.handleThumbError(this) : (this.src='${DEFAULT_THUMB}')">
           </div>
           <div class="queue-item-meta">
             <div class="queue-item-title-row">
@@ -2368,45 +2504,24 @@
         </div>
       `;
 
-      card.addEventListener('click', (e) => {
-        if (e.target.closest('.btn-queue-action') || e.target.closest('.btn-queue-step')) return;
-        state.queueIndex = idx;
-        loadTrack(track, true);
-        renderQueueDrawer();
-      });
+      frag.appendChild(card);
+    }
 
-      const upBtn = card.querySelector('.btn-queue-step.move-up');
-      if (upBtn) {
-        upBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          if (idx > 0) moveQueueTrack(idx, idx - 1);
-        });
-      }
+    if (endIdx < state.currentQueue.length) {
+      const bottomInfo = document.createElement('div');
+      bottomInfo.className = 'queue-window-indicator';
+      bottomInfo.style.cssText = 'padding: 8px 16px; font-size: 11px; color: var(--text-muted, #8e909a); text-align: center;';
+      bottomInfo.textContent = `+${state.currentQueue.length - endIdx} more upcoming tracks in queue`;
+      frag.appendChild(bottomInfo);
+    }
 
-      const downBtn = card.querySelector('.btn-queue-step.move-down');
-      if (downBtn) {
-        downBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          if (idx < state.currentQueue.length - 1) moveQueueTrack(idx, idx + 1);
-        });
-      }
-
-      const removeBtn = card.querySelector('.btn-queue-action.remove');
-      if (removeBtn) {
-        removeBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          removeFromQueue(idx);
-        });
-      }
-
-      DOM.cvQueueContent.appendChild(card);
-    });
+    DOM.cvQueueContent.appendChild(frag);
 
     const activeItem = DOM.cvQueueContent.querySelector('.queue-item.active');
     if (activeItem) {
       setTimeout(() => {
         activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }, 80);
+      }, 50);
     }
   }
 
@@ -2421,7 +2536,7 @@
     } else if (fromIdx > state.queueIndex && toIdx <= state.queueIndex) {
       state.queueIndex++;
     }
-    renderQueueDrawer();
+    renderQueueDrawer(true);
     showToast('Queue updated');
   }
 
@@ -2437,7 +2552,7 @@
       state.queueIndex = Math.min(state.queueIndex, state.currentQueue.length - 1);
       loadTrack(state.currentQueue[state.queueIndex], state.isPlaying);
     }
-    renderQueueDrawer();
+    renderQueueDrawer(true);
     showToast('Track removed from queue');
   }
 
@@ -2454,7 +2569,7 @@
     }
     state.currentQueue = [cur, ...others];
     state.queueIndex = 0;
-    renderQueueDrawer();
+    renderQueueDrawer(true);
     showToast('🔀 Queue shuffled');
   }
 
@@ -2466,7 +2581,7 @@
       state.currentQueue = [];
       state.queueIndex = 0;
     }
-    renderQueueDrawer();
+    renderQueueDrawer(true);
     showToast('Upcoming queue cleared');
   }
 
@@ -5444,7 +5559,7 @@
 
     card.innerHTML = `
       <div class="card-thumb-container">
-        <img class="card-thumb-img" src="${thumb}" alt="${escapeHtml(track.title)}" loading="lazy" onerror="if (this.src && this.src.includes('hq720.jpg')) { this.src = this.src.replace('hq720.jpg', 'hqdefault.jpg'); } else { this.src = '${DEFAULT_THUMB}'; }">
+        <img class="card-thumb-img" src="${thumb}" alt="${escapeHtml(track.title)}" loading="lazy" decoding="async" onerror="if (this.src && this.src.includes('hq720.jpg')) { this.src = this.src.replace('hq720.jpg', 'hqdefault.jpg'); } else { this.src = '${DEFAULT_THUMB}'; }">
         <span class="card-duration-badge">${track.duration || '4:00'}</span>
         <div class="card-hover-play" title="Play">
           <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -5471,9 +5586,13 @@
       return t.category && t.category.toLowerCase().includes(categoryFilter.toLowerCase());
     });
 
-    tracks.forEach((track) => {
-      gridEl.appendChild(createMusicCard(track));
+    // Render top 16 curated tracks with DocumentFragment for 60fps horizontal scrolling
+    const shelfTracks = tracks.slice(0, 16);
+    const frag = document.createDocumentFragment();
+    shelfTracks.forEach((track) => {
+      frag.appendChild(createMusicCard(track));
     });
+    gridEl.appendChild(frag);
   }
 
   function renderSpotifyHomeShelves() {
@@ -5571,14 +5690,99 @@
     });
   }
 
-  function renderMusicGrid(tracks, isAppend = false) {
-    if (!isAppend) {
-      DOM.musicCardGrid.innerHTML = '';
+  const GRID_BATCH_SIZE = 28;
+  let gridObserver = null;
+
+  function setupGridObserver() {
+    if (gridObserver || !DOM.infiniteLoader) return;
+
+    const scrollRoot = (document.body && window.getComputedStyle(document.body).overflowY !== 'visible') ? document.body : null;
+
+    try {
+      gridObserver = new IntersectionObserver(
+        (entries) => {
+          const first = entries[0];
+          if (first && first.isIntersecting) {
+            if (state.currentGridTracks && state.gridRenderedCount < state.currentGridTracks.length) {
+              renderMusicGridBatch();
+            }
+          }
+        },
+        { root: scrollRoot, rootMargin: '600px 0px' }
+      );
+      gridObserver.observe(DOM.infiniteLoader);
+    } catch (_) {}
+
+    // Passive scroll listener fallback for hybrid container scroll contexts
+    const scrollContainer = scrollRoot || window;
+    let scrollThrottle = false;
+    scrollContainer.addEventListener('scroll', () => {
+      if (scrollThrottle) return;
+      scrollThrottle = true;
+      requestAnimationFrame(() => {
+        scrollThrottle = false;
+        if (!DOM.infiniteLoader || !state.currentGridTracks) return;
+        const rect = DOM.infiniteLoader.getBoundingClientRect();
+        if (rect.top <= window.innerHeight + 600) {
+          if (state.gridRenderedCount < state.currentGridTracks.length) {
+            renderMusicGridBatch();
+          }
+        }
+      });
+    }, { passive: true });
+
+    if (DOM.loadMoreBtn) {
+      DOM.loadMoreBtn.onclick = (e) => {
+        e.preventDefault();
+        renderMusicGridBatch();
+      };
+    }
+  }
+
+  function renderMusicGridBatch() {
+    if (!DOM.musicCardGrid || !state.currentGridTracks) return;
+    const remaining = state.currentGridTracks.length - state.gridRenderedCount;
+    if (remaining <= 0) {
+      if (DOM.infiniteLoader) DOM.infiniteLoader.style.display = 'none';
+      if (DOM.loadMoreBtn) DOM.loadMoreBtn.style.display = 'none';
+      return;
     }
 
-    tracks.forEach((track) => {
-      DOM.musicCardGrid.appendChild(createMusicCard(track));
+    const nextBatch = state.currentGridTracks.slice(
+      state.gridRenderedCount,
+      state.gridRenderedCount + GRID_BATCH_SIZE
+    );
+    const frag = document.createDocumentFragment();
+    nextBatch.forEach((track) => {
+      frag.appendChild(createMusicCard(track));
     });
+    DOM.musicCardGrid.appendChild(frag);
+    state.gridRenderedCount += nextBatch.length;
+
+    if (state.gridRenderedCount >= state.currentGridTracks.length) {
+      if (DOM.infiniteLoader) DOM.infiniteLoader.style.display = 'none';
+      if (DOM.loadMoreBtn) DOM.loadMoreBtn.style.display = 'none';
+    } else {
+      if (DOM.infiniteLoader) DOM.infiniteLoader.style.display = 'flex';
+      if (DOM.loadMoreBtn) DOM.loadMoreBtn.style.display = 'inline-block';
+    }
+  }
+
+  function renderMusicGrid(tracks, isAppend = false) {
+    if (!DOM.musicCardGrid) return;
+    setupGridObserver();
+
+    if (!isAppend) {
+      DOM.musicCardGrid.innerHTML = '';
+      state.currentGridTracks = tracks || [];
+      state.gridRenderedCount = 0;
+    } else {
+      if (tracks && tracks.length > 0) {
+        state.currentGridTracks = (state.currentGridTracks || []).concat(tracks);
+      }
+    }
+
+    renderMusicGridBatch();
   }
 
   function renderSearchGenreTiles() {
@@ -5611,9 +5815,12 @@
           (t) => t.category && t.category.toLowerCase().includes(g.title.toLowerCase())
         );
         DOM.searchResultGrid.innerHTML = '';
-        (matched.length > 0 ? matched : state.allTracks).forEach((t) => {
-          DOM.searchResultGrid.appendChild(createMusicCard(t));
+        const searchTracks = (matched.length > 0 ? matched : state.allTracks).slice(0, 48);
+        const frag = document.createDocumentFragment();
+        searchTracks.forEach((t) => {
+          frag.appendChild(createMusicCard(t));
         });
+        DOM.searchResultGrid.appendChild(frag);
         DOM.searchResultCount.textContent = `${matched.length} tracks ready to stream`;
         if (DOM.searchBrowseSection) DOM.searchBrowseSection.style.display = 'none';
         DOM.searchResultGrid.scrollIntoView({ behavior: 'smooth' });
@@ -5621,11 +5828,14 @@
       DOM.searchCategoryTiles.appendChild(card);
     });
 
-    // Populate searchResultGrid with all tracks by default
+    // Populate searchResultGrid with a lightweight starter set (24 tracks) when empty
     if (DOM.searchResultGrid && DOM.searchResultGrid.children.length === 0) {
-      state.allTracks.forEach((t) => {
-        DOM.searchResultGrid.appendChild(createMusicCard(t));
+      const initialSearchSet = state.allTracks.slice(0, 24);
+      const frag = document.createDocumentFragment();
+      initialSearchSet.forEach((t) => {
+        frag.appendChild(createMusicCard(t));
       });
+      DOM.searchResultGrid.appendChild(frag);
       DOM.searchResultCount.textContent = `${state.allTracks.length} total tracks available`;
     }
   }
@@ -5926,10 +6136,12 @@
     if (!DOM.searchResultGrid) return;
     const items = state.lastSearchResults || [];
     DOM.searchResultGrid.innerHTML = '';
+    const frag = document.createDocumentFragment();
 
     if (filterType === 'all' || filterType === 'songs') {
-      items.forEach((t) => {
-        DOM.searchResultGrid.appendChild(createMusicCard(t));
+      const displayItems = items.slice(0, 60);
+      displayItems.forEach((t) => {
+        frag.appendChild(createMusicCard(t));
       });
     } else if (filterType === 'artists') {
       const artistsMap = new Map();
@@ -5944,7 +6156,7 @@
         const thumb = getHighResThumbnail(tracks[0]);
         card.innerHTML = `
           <div class="card-thumb-container artist-round-container">
-            <img class="card-thumb-img artist-round-img" src="${thumb}" alt="${escapeHtml(aName)}" loading="lazy" onerror="window.handleThumbError ? window.handleThumbError(this) : (this.src='${DEFAULT_THUMB}')">
+            <img class="card-thumb-img artist-round-img" src="${thumb}" alt="${escapeHtml(aName)}" loading="lazy" decoding="async" onerror="window.handleThumbError ? window.handleThumbError(this) : (this.src='${DEFAULT_THUMB}')">
             <div class="card-hover-play" title="Play Artist">
               <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             </div>
@@ -5963,7 +6175,7 @@
             openArtistDetail(aName);
           }
         });
-        DOM.searchResultGrid.appendChild(card);
+        frag.appendChild(card);
       });
     } else if (filterType === 'albums') {
       const albumsMap = new Map();
@@ -5978,7 +6190,7 @@
         const thumb = getHighResThumbnail(tracks[0]);
         card.innerHTML = `
           <div class="card-thumb-container">
-            <img class="card-thumb-img" src="${thumb}" alt="${escapeHtml(albName)}" loading="lazy" onerror="window.handleThumbError ? window.handleThumbError(this) : (this.src='${DEFAULT_THUMB}')">
+            <img class="card-thumb-img" src="${thumb}" alt="${escapeHtml(albName)}" loading="lazy" decoding="async" onerror="window.handleThumbError ? window.handleThumbError(this) : (this.src='${DEFAULT_THUMB}')">
             <span class="card-duration-badge">${tracks.length} Songs</span>
             <div class="card-hover-play" title="Play Album">
               <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -5998,9 +6210,11 @@
             openAlbumDetail(albName);
           }
         });
-        DOM.searchResultGrid.appendChild(card);
+        frag.appendChild(card);
       });
     }
+
+    DOM.searchResultGrid.appendChild(frag);
 
     if (DOM.emptySearchState) {
       DOM.emptySearchState.style.display = DOM.searchResultGrid.children.length === 0 ? 'block' : 'none';

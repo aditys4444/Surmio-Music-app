@@ -1,4 +1,4 @@
-const CACHE_NAME = 'surmio-v1';
+const CACHE_NAME = 'surmio-v2.1';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
