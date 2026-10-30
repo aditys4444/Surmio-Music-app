@@ -1,4 +1,4 @@
-const CACHE_NAME = 'surmio-v2.3';
+const CACHE_NAME = 'surmio-v3.0';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -36,7 +36,7 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
   // Audio streams, downloads, and API calls bypass cache and stream directly
-  if (url.pathname.startsWith('/api/') || event.request.headers.get('range')) {
+  if (url.pathname.startsWith('/api/') || url.pathname.includes('/media/') || url.pathname.endsWith('.m4a') || url.pathname.endsWith('.mp3') || event.request.headers.get('range')) {
     return;
   }
 

@@ -16,6 +16,7 @@ public class MainActivity extends BridgeActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        this.keepRunning = true;
         super.onCreate(savedInstanceState);
 
         // Unlock maximum display refresh rate (90Hz, 120Hz, 144Hz) for ultra-smooth UI scrolling

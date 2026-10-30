@@ -1500,17 +1500,10 @@
   </div> <!-- End surmio-layout / alyvex-layout -->
 
   <!-- Dedicated HTML5 Pure Audio Engine & Background Host (Persistent across all pages & lockscreen) -->
-  <audio id="audioPlayer" preload="auto" crossorigin="anonymous"></audio>
+  <audio id="audioPlayer" preload="auto"></audio>
   <input id="localAudioPicker" type="file" accept="audio/*,.mp3,.m4a,.aac,.wav,.ogg,.flac,.opus" multiple hidden>
-  <div id="ytAudioHost" style="position: fixed; bottom: 0; right: 0; width: 240px; height: 160px; opacity: 0.005; pointer-events: none; z-index: 0; overflow: hidden;">
-    <div id="ytPlayerTarget" style="width: 100%; height: 100%;"></div>
-  </div>
-  <style>
-    #ytAudioHost iframe { width: 100% !important; height: 100% !important; border: 0 !important; }
-  </style>
 
-  <script src="https://www.youtube.com/iframe_api"></script>
   <script src="catalog.js"></script>
-  <script src="app.js?v=2.6"></script>
+  <script src="app.js?v=2.7"></script>
 </body>
 </html>
