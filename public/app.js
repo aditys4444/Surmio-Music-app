@@ -742,6 +742,7 @@
     if (parts.length === 2) return parts[0] * 60 + parts[1];
     return parseInt(durStr, 10) || 240;
   }
+  const parseTimeToSeconds = parseDurationToSeconds;
 
   function updateProgressUI(curSec, durSec) {
     if (!durSec || isNaN(durSec)) return;
@@ -1591,6 +1592,11 @@
       localStorage.setItem('alyvex_speed', String(speed));
       localStorage.setItem('surmio_selected_speed', String(speed));
     } catch (_) {}
+    if (window.AndroidAudioBridge && typeof window.AndroidAudioBridge.setPlaybackSpeed === 'function') {
+      try {
+        window.AndroidAudioBridge.setPlaybackSpeed(speed);
+      } catch (_) {}
+    }
     const audio = getAudioPlayer();
     if (audio) {
       audio.playbackRate = speed;
@@ -1604,7 +1610,93 @@
     showToast(`Playback speed: ${speed}x`);
   }
 
+  function initNativeAudioBridgeSync() {
+    // 1. Ticker to update seekbar progress and synchronized lyrics
+    setInterval(() => {
+      if (window.AndroidAudioBridge && state.isPlaying && !state.isDraggingSeekbar) {
+        try {
+          const posMs = window.AndroidAudioBridge.getCurrentPosition();
+          const durMs = window.AndroidAudioBridge.getDuration();
+          const posSec = posMs > 0 ? (posMs / 1000) : 0;
+          let durSec = durMs > 0 ? (durMs / 1000) : 0;
+          if (!durSec && state.currentTrack) {
+            durSec = parseDurationToSeconds(state.currentTrack.duration) || 180;
+          }
+          if (durSec > 0) {
+            updateProgressUI(posSec, durSec);
+            updateLyricsHighlight(posSec);
+          }
+        } catch (_) {}
+      }
+    }, 250);
+
+    // 2. Callback invoked by MainActivity's BackgroundAudioService.UiSyncListener
+    window.onNativeAudioSync = function(event, isPlaying, posMs, durMs, title, artist, artUrl) {
+      state.isPlaying = !!isPlaying;
+      updatePlayPauseUI(state.isPlaying);
+
+      if ((event === 'trackChanged' || event === 'playing') && title) {
+        let match = (state.currentQueue || []).find((t) => t.title === title || (t.title && t.title.toLowerCase() === title.toLowerCase()));
+        if (!match) {
+          match = (state.allTracks || []).find((t) => t.title === title || (t.title && t.title.toLowerCase() === title.toLowerCase()));
+        }
+        if (match && match !== state.currentTrack) {
+          state.currentTrack = match;
+          if (DOM.dockedTitle) DOM.dockedTitle.textContent = match.title;
+          if (DOM.dockedArtist) DOM.dockedArtist.textContent = match.author || 'Surmio';
+          if (DOM.cvMusicTitle) DOM.cvMusicTitle.textContent = match.title;
+          if (DOM.cvMusicArtist) DOM.cvMusicArtist.textContent = match.author || 'Surmio';
+          const thumb = getHighResThumbnail(match, true);
+          if (DOM.dockedThumb) DOM.dockedThumb.src = thumb;
+          if (DOM.cvMusicArtImg) DOM.cvMusicArtImg.src = thumb;
+          if (DOM.cvAmbientBackdrop) DOM.cvAmbientBackdrop.style.backgroundImage = `url("${thumb}")`;
+          updateHeroBanner(match);
+          renderQueueDrawer(false);
+        }
+      }
+
+      if (posMs !== undefined && durMs !== undefined && durMs > 0 && !state.isDraggingSeekbar) {
+        const posSec = posMs / 1000;
+        const durSec = durMs / 1000;
+        updateProgressUI(posSec, durSec);
+        updateLyricsHighlight(posSec);
+      }
+    };
+
+    // 3. Check if audio is already playing natively on startup (e.g. app reopened from notification)
+    if (window.AndroidAudioBridge && typeof window.AndroidAudioBridge.getCurrentTrackJson === 'function') {
+      try {
+        const raw = window.AndroidAudioBridge.getCurrentTrackJson();
+        if (raw && raw !== '{}') {
+          const info = JSON.parse(raw);
+          if (info && info.title) {
+            let match = (state.allTracks || []).find((t) => t.title === info.title);
+            if (match) {
+              state.currentTrack = match;
+              state.isPlaying = !!info.isPlaying;
+              updatePlayPauseUI(state.isPlaying);
+              if (DOM.dockedTitle) DOM.dockedTitle.textContent = match.title;
+              if (DOM.dockedArtist) DOM.dockedArtist.textContent = match.author || 'Surmio';
+              if (DOM.cvMusicTitle) DOM.cvMusicTitle.textContent = match.title;
+              if (DOM.cvMusicArtist) DOM.cvMusicArtist.textContent = match.author || 'Surmio';
+              const thumb = getHighResThumbnail(match, true);
+              if (DOM.dockedThumb) DOM.dockedThumb.src = thumb;
+              if (DOM.cvMusicArtImg) DOM.cvMusicArtImg.src = thumb;
+              if (DOM.cvAmbientBackdrop) DOM.cvAmbientBackdrop.style.backgroundImage = `url("${thumb}")`;
+              updateHeroBanner(match);
+              if (info.positionMs && info.durationMs) {
+                updateProgressUI(info.positionMs / 1000, info.durationMs / 1000);
+              }
+            }
+          }
+        }
+      } catch (_) {}
+    }
+  }
+
   function initPlaybackEngine() {
+    initNativeAudioBridgeSync();
+
     const audio = getAudioPlayer();
     if (!audio) {
       console.warn('Audio player element not found');
@@ -1933,6 +2025,60 @@
     state.fallbackAttempt = 0;
     state.currentEngine = 'audio';
 
+    const targetSrc = getTrackAudioSrc(track);
+    const durationMs = Math.round((parseDurationToSeconds(track.duration) || 180) * 1000);
+
+    // Native Android Hardware Audio Service integration for continuous background playback
+    if (window.AndroidAudioBridge && typeof window.AndroidAudioBridge.playTrack === 'function') {
+      const audio = getAudioPlayer();
+      if (audio) {
+        try {
+          audio.pause();
+          audio.removeAttribute('src');
+          audio.load();
+        } catch (_) {}
+      }
+
+      // Sync full queue to native service so next/prev operates autonomously in notification shade
+      try {
+        const serializedQueue = (state.currentQueue || []).slice(0, 50).map((t) => ({
+          title: t.title || 'Song',
+          artist: t.author || t.artist || 'Surmio',
+          thumbnail: getHighResThumbnail(t, true),
+          audioSrc: getTrackAudioSrc(t),
+          durationSec: parseDurationToSeconds(t.duration) || 180,
+        }));
+        window.AndroidAudioBridge.setQueue(JSON.stringify(serializedQueue));
+      } catch (_) {}
+
+      if (autoPlay) {
+        window.AndroidAudioBridge.playTrack(
+          track.title || 'Surmio Music',
+          track.author || track.artist || 'Surmio',
+          thumb,
+          targetSrc,
+          durationMs
+        );
+        state.isPlaying = true;
+        state.shouldBePlaying = true;
+        state.isUserPaused = false;
+        updatePlayPauseUI(true);
+        if ('mediaSession' in navigator) {
+          navigator.mediaSession.playbackState = 'playing';
+        }
+      } else {
+        window.AndroidAudioBridge.pause();
+        state.isPlaying = false;
+        state.shouldBePlaying = false;
+        state.isUserPaused = true;
+        updatePlayPauseUI(false);
+        if ('mediaSession' in navigator) {
+          navigator.mediaSession.playbackState = 'paused';
+        }
+      }
+      return;
+    }
+
     const audio = getAudioPlayer();
     if (audio) {
       const targetSrc = getTrackAudioSrc(track);
@@ -1987,6 +2133,14 @@
     addToRecentlyPlayed(track);
     recordBehaviorPlay(track);
 
+    if (window.AndroidAudioBridge && typeof window.AndroidAudioBridge.resume === 'function') {
+      window.AndroidAudioBridge.resume();
+      state.isPlaying = true;
+      updatePlayPauseUI(true);
+      if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+      return;
+    }
+
     const audio = getAudioPlayer();
     if (audio) {
       if (!audio.src || audio.src === window.location.href || audio.src.endsWith('/')) {
@@ -2024,6 +2178,12 @@
     if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
     releaseWakeLock();
     syncNativeMediaNotification(state.currentTrack, false);
+
+    if (window.AndroidAudioBridge && typeof window.AndroidAudioBridge.pause === 'function') {
+      try {
+        window.AndroidAudioBridge.pause();
+      } catch (_) {}
+    }
 
     const audio = getAudioPlayer();
     if (audio) {
@@ -2063,7 +2223,12 @@
   function seekRelative(sec) {
     let cur = 0;
     let dur = 0;
-    if (state.currentEngine === 'youtube' && ytPlayer && ytReady) {
+    if (window.AndroidAudioBridge) {
+      try {
+        cur = (window.AndroidAudioBridge.getCurrentPosition() || 0) / 1000;
+        dur = (window.AndroidAudioBridge.getDuration() || 0) / 1000;
+      } catch (_) {}
+    } else if (state.currentEngine === 'youtube' && ytPlayer && ytReady) {
       cur = (ytPlayer.getCurrentTime && ytPlayer.getCurrentTime()) || 0;
       dur = (ytPlayer.getDuration && ytPlayer.getDuration()) || 300;
     } else {
@@ -2376,6 +2541,22 @@
   }
 
   function seekToTime(sec) {
+    if (window.AndroidAudioBridge && typeof window.AndroidAudioBridge.seekTo === 'function') {
+      const posMs = Math.round(sec * 1000);
+      try {
+        window.AndroidAudioBridge.seekTo(posMs);
+      } catch (_) {}
+      let durSec = 180;
+      try {
+        const nativeDurMs = window.AndroidAudioBridge.getDuration();
+        if (nativeDurMs > 0) durSec = nativeDurMs / 1000;
+        else if (state.currentTrack) durSec = parseDurationToSeconds(state.currentTrack.duration) || 180;
+      } catch (_) {}
+      updateProgressUI(sec, durSec);
+      updateLyricsHighlight(sec);
+      return;
+    }
+
     const audio = getAudioPlayer();
     if (audio) {
       const dur = audio.duration && !isNaN(audio.duration) ? audio.duration : 1;
@@ -6388,7 +6569,7 @@
           const audio = getAudioPlayer();
           if (audio && audio.duration && !isNaN(audio.duration)) dur = audio.duration;
           else if (ytPlayer && ytReady && ytPlayer.getDuration) dur = ytPlayer.getDuration();
-          else dur = curTrack.duration ? parseTimeToSeconds(curTrack.duration) : 0;
+          else dur = curTrack.duration ? parseDurationToSeconds(curTrack.duration) : 0;
         }
         const durMs = Math.round((dur || 0) * 1000);
         const posMs = Math.round((pos || 0) * 1000);
@@ -6828,6 +7009,8 @@
   window.switchView = switchView;
   window.openCineVault = openCineVault;
   window.closeCineVault = closeCineVault;
+  window.closeSpeedModal = closeSpeedModal;
+  window.closeQueueDrawer = closeAllDrawers;
   window.loadTrack = loadTrack;
   window.downloadTrack = downloadTrack;
   window.playMedia = playMedia;
@@ -6835,6 +7018,7 @@
   window.playNextTrack = playNextTrack;
   window.playPrevTrack = playPrevTrack;
   window.seekToTime = seekToTime;
+  window.setPlaybackSpeed = setPlaybackSpeed;
   window.state = state;
 
   if (document.readyState === 'loading') {
