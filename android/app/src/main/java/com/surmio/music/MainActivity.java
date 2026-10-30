@@ -42,6 +42,22 @@ public class MainActivity extends BridgeActivity {
                 settings.setOffscreenPreRaster(true);
             } catch (Exception ignored) {}
 
+            // Guarantee continuous background audio in YouTube iframes by overriding visibility detection across all frames
+            if (androidx.webkit.WebViewFeature.isFeatureSupported(androidx.webkit.WebViewFeature.DOCUMENT_START_SCRIPT)) {
+                try {
+                    String bgAudioScript = 
+                        "try {" +
+                        "  Object.defineProperty(document, 'hidden', { get: function() { return false; }, configurable: true });" +
+                        "  Object.defineProperty(document, 'visibilityState', { get: function() { return 'visible'; }, configurable: true });" +
+                        "  window.addEventListener('visibilitychange', function(e) { e.stopImmediatePropagation(); }, true);" +
+                        "  document.addEventListener('visibilitychange', function(e) { e.stopImmediatePropagation(); }, true);" +
+                        "} catch (e) {}";
+                    java.util.Set<String> origins = new java.util.HashSet<>();
+                    origins.add("*");
+                    androidx.webkit.WebViewCompat.addDocumentStartJavaScript(webView, bgAudioScript, origins);
+                } catch (Exception ignored) {}
+            }
+
             // Register native bridge for real-time notification shade updates
             webView.addJavascriptInterface(new Object() {
                 @JavascriptInterface

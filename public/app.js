@@ -1386,8 +1386,8 @@
       if (!target) return;
       try {
         ytPlayer = new YT.Player('ytPlayerTarget', {
-          height: '200',
-          width: '200',
+          height: '100%',
+          width: '100%',
           playerVars: {
             autoplay: 0,
             controls: 0,
@@ -1418,14 +1418,17 @@
                 pendingYtId = null;
                 pendingAutoPlay = false;
                 if (shouldAuto) {
+                  startSilentKeepAlive();
                   ytPlayer.loadVideoById(idToPlay);
                   state.isPlaying = true;
                   updatePlayPauseUI(true);
                   startYtTicker();
+                  syncNativeMediaNotification(state.currentTrack, true);
                 } else {
                   ytPlayer.cueVideoById(idToPlay);
                   state.isPlaying = false;
                   updatePlayPauseUI(false);
+                  syncNativeMediaNotification(state.currentTrack, false);
                 }
               }
             },
@@ -1436,8 +1439,10 @@
                 state.isPlaying = true;
                 state.shouldBePlaying = true;
                 state.isUserPaused = false;
+                startSilentKeepAlive();
                 updatePlayPauseUI(true);
                 startYtTicker();
+                syncNativeMediaNotification(state.currentTrack, true);
                 if (DOM.cvBufferingOverlay) DOM.cvBufferingOverlay.style.display = 'none';
               } else if (event.data === YT.PlayerState.PAUSED) {
                 // If paused involuntarily by OS minimization while user wants playback
@@ -1448,8 +1453,10 @@
                   } catch (_) {}
                 }
                 state.isPlaying = false;
+                stopSilentKeepAlive();
                 updatePlayPauseUI(false);
                 stopYtTicker();
+                syncNativeMediaNotification(state.currentTrack, false);
                 if (DOM.cvBufferingOverlay) DOM.cvBufferingOverlay.style.display = 'none';
               } else if (event.data === YT.PlayerState.BUFFERING) {
                 if (DOM.cvBufferingOverlay) DOM.cvBufferingOverlay.style.display = 'flex';
@@ -1462,6 +1469,7 @@
                   }, 600);
                 }
               } else if (event.data === YT.PlayerState.ENDED) {
+                stopSilentKeepAlive();
                 onTrackEnded();
               }
             },
@@ -1554,6 +1562,35 @@
 
   function getAudioPlayer() {
     return DOM.audioPlayer || document.getElementById('audioPlayer');
+  }
+
+  // ==========================================
+  // Continuous Background Media Keep-Alive
+  // ==========================================
+  let silentKeeper = null;
+  function startSilentKeepAlive() {
+    try {
+      if (!silentKeeper) {
+        silentKeeper = document.createElement('audio');
+        silentKeeper.id = 'surmioSilentKeeper';
+        silentKeeper.loop = true;
+        // 1-second silent WAV base64
+        silentKeeper.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+        silentKeeper.volume = 0.001;
+        document.body.appendChild(silentKeeper);
+      }
+      if (silentKeeper.paused) {
+        silentKeeper.play().catch(() => {});
+      }
+    } catch (_) {}
+  }
+
+  function stopSilentKeepAlive() {
+    try {
+      if (silentKeeper && !silentKeeper.paused) {
+        silentKeeper.pause();
+      }
+    } catch (_) {}
   }
 
   // ==========================================
@@ -1678,24 +1715,29 @@
     if (DOM.cvSpeedBtn) DOM.cvSpeedBtn.textContent = `${initSpeed}x`;
 
     audio.addEventListener('loadstart', () => {
+      if (state.currentEngine !== 'audio') return;
       if (DOM.cvBufferingOverlay) DOM.cvBufferingOverlay.style.display = 'flex';
     });
 
     audio.addEventListener('waiting', () => {
+      if (state.currentEngine !== 'audio') return;
       if (DOM.cvBufferingOverlay) DOM.cvBufferingOverlay.style.display = 'flex';
     });
 
     audio.addEventListener('playing', () => {
+      if (state.currentEngine !== 'audio') return;
       if (DOM.cvBufferingOverlay) DOM.cvBufferingOverlay.style.display = 'none';
       state.isPlaying = true;
       updatePlayPauseUI(true);
     });
 
     audio.addEventListener('canplay', () => {
+      if (state.currentEngine !== 'audio') return;
       if (DOM.cvBufferingOverlay) DOM.cvBufferingOverlay.style.display = 'none';
     });
 
     audio.addEventListener('loadedmetadata', () => {
+      if (state.currentEngine !== 'audio') return;
       if (audio.duration && !isNaN(audio.duration) && audio.duration > 0) {
         updateProgressUI(audio.currentTime, audio.duration);
         syncMediaSessionPosition(audio.currentTime, audio.duration);
@@ -1703,12 +1745,14 @@
     });
 
     audio.addEventListener('pause', () => {
+      if (state.currentEngine !== 'audio') return;
       if (DOM.cvBufferingOverlay) DOM.cvBufferingOverlay.style.display = 'none';
       state.isPlaying = false;
       updatePlayPauseUI(false);
     });
 
     audio.addEventListener('timeupdate', () => {
+      if (state.currentEngine !== 'audio') return;
       if (!audio.duration || isNaN(audio.duration)) return;
       const cur = audio.currentTime;
       const dur = audio.duration;
@@ -1718,6 +1762,7 @@
     });
 
     audio.addEventListener('progress', () => {
+      if (state.currentEngine !== 'audio') return;
       if (!audio.duration || isNaN(audio.duration)) return;
       if (audio.buffered && audio.buffered.length > 0) {
         try {
@@ -1729,9 +1774,13 @@
       }
     });
 
-    audio.addEventListener('ended', onTrackEnded);
+    audio.addEventListener('ended', () => {
+      if (state.currentEngine !== 'audio') return;
+      onTrackEnded();
+    });
 
     audio.addEventListener('error', () => {
+      if (state.currentEngine !== 'audio') return;
       const err = audio.error;
       console.warn('Audio note, activating local studio stream fallback:', err ? err.message || err.code : 'unknown');
       if (DOM.cvBufferingOverlay) DOM.cvBufferingOverlay.style.display = 'none';
@@ -1991,7 +2040,78 @@
       }
     }
 
-    // High-Fidelity HTML5 Audio Playback Engine (100% Background & Notification Shade Sound)
+    // Unified Playback Engine Routing (Real Song Audio Guaranteed)
+    // 1. Direct Local File or Downloaded Offline Track -> HTML5 audioPlayer
+    const isDownloadedFile = track.isDownloaded && track.downloadedBlobUrl;
+    const isLocalUserFile = track.isLocalFile && track.streamUrl;
+    const videoId = (!isDownloadedFile && !isLocalUserFile)
+      ? (getYouTubeIdFromTrack(track) || (track.id && track.id.startsWith('ymusic-') ? track.id.replace('ymusic-', '') : (/^[a-zA-Z0-9_-]{11}$/.test(track.id) ? track.id : null)))
+      : null;
+
+    if (videoId) {
+      state.currentEngine = 'youtube';
+      const audio = getAudioPlayer();
+      if (audio && !audio.paused) {
+        try { audio.pause(); } catch (_) {}
+      }
+
+      if (autoPlay) {
+        startSilentKeepAlive();
+      } else {
+        stopSilentKeepAlive();
+      }
+
+      if (ytPlayer && ytReady) {
+        if (state.selectedSpeed && ytPlayer.setPlaybackRate) {
+          try { ytPlayer.setPlaybackRate(state.selectedSpeed); } catch (_) {}
+        }
+        if (state.volume !== undefined && ytPlayer.setVolume) {
+          try { ytPlayer.setVolume(Math.round(state.volume * 100)); } catch (_) {}
+        }
+        if (state.isMuted && ytPlayer.mute) {
+          try { ytPlayer.mute(); } catch (_) {}
+        }
+
+        if (autoPlay) {
+          try {
+            ytPlayer.loadVideoById(videoId);
+            state.isPlaying = true;
+            state.shouldBePlaying = true;
+            state.isUserPaused = false;
+            updatePlayPauseUI(true);
+            startYtTicker();
+            requestWakeLock();
+            if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+            syncNativeMediaNotification(track, true);
+          } catch (e) {
+            console.warn('YouTube load error:', e);
+          }
+        } else {
+          try {
+            ytPlayer.cueVideoById(videoId);
+            state.isPlaying = false;
+            state.shouldBePlaying = false;
+            state.isUserPaused = true;
+            updatePlayPauseUI(false);
+            stopYtTicker();
+            syncNativeMediaNotification(track, false);
+          } catch (_) {}
+        }
+      } else {
+        pendingYtId = videoId;
+        pendingAutoPlay = autoPlay;
+        if (autoPlay) {
+          state.isPlaying = true;
+          state.shouldBePlaying = true;
+          state.isUserPaused = false;
+          updatePlayPauseUI(true);
+          syncNativeMediaNotification(track, true);
+        }
+      }
+      return;
+    }
+
+    // 2. High-Fidelity HTML5 Audio Playback Engine for Local/Downloaded Media
     state.fallbackAttempt = 0;
     state.currentEngine = 'audio';
 
@@ -2000,6 +2120,7 @@
       try { ytPlayer.pauseVideo(); } catch (_) {}
       stopYtTicker();
     }
+    stopSilentKeepAlive();
 
     const audio = getAudioPlayer();
     if (audio) {
@@ -2030,21 +2151,6 @@
             syncNativeMediaNotification(track, true);
           }).catch((err) => {
             console.warn('Audio playback start note:', err.message);
-            // Fallback immediately to bundled local studio audio asset so sound NEVER fails
-            const bundled = ['media/track1.mp3', 'media/track2.mp3', 'media/track3.mp3'];
-            let h = 0;
-            const s = String(track.id || track.title || '1');
-            for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
-            const fallbackSrc = bundled[Math.abs(h) % bundled.length];
-            if (audio.src !== fallbackSrc && !audio.src.endsWith(fallbackSrc)) {
-              audio.src = fallbackSrc;
-              audio.playbackRate = state.selectedSpeed || 1.0;
-              audio.play().then(() => {
-                state.isPlaying = true;
-                updatePlayPauseUI(true);
-                syncNativeMediaNotification(track, true);
-              }).catch(() => {});
-            }
           });
         }
       } else {
@@ -2071,6 +2177,7 @@
     recordBehaviorPlay(track);
 
     if (state.currentEngine === 'youtube') {
+      startSilentKeepAlive();
       if (ytPlayer && ytReady && ytPlayer.playVideo) {
         try {
           ytPlayer.playVideo();
@@ -2129,6 +2236,7 @@
     syncNativeMediaNotification(state.currentTrack, false);
 
     if (state.currentEngine === 'youtube') {
+      stopSilentKeepAlive();
       if (ytPlayer && ytReady && ytPlayer.pauseVideo) {
         try { ytPlayer.pauseVideo(); } catch (_) {}
         stopYtTicker();
