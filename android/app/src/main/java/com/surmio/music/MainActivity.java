@@ -3,6 +3,10 @@ package com.surmio.music;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Display;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -14,15 +18,29 @@ public class MainActivity extends BridgeActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Unlock maximum display refresh rate (90Hz, 120Hz, 144Hz) for ultra-smooth UI scrolling
+        unlockMaxRefreshRate();
+
         // Keep audio streaming and media playback active in WebView
         if (bridge != null && bridge.getWebView() != null) {
             WebView webView = bridge.getWebView();
+            webView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+            webView.setVerticalScrollBarEnabled(false);
+            webView.setHorizontalScrollBarEnabled(false);
+
             WebSettings settings = webView.getSettings();
             settings.setMediaPlaybackRequiresUserGesture(false);
             settings.setJavaScriptEnabled(true);
             settings.setDomStorageEnabled(true);
             settings.setDatabaseEnabled(true);
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                settings.setSafeBrowsingEnabled(false);
+            }
+            try {
+                settings.setOffscreenPreRaster(true);
+            } catch (Exception ignored) {}
 
             // Register native bridge for real-time notification shade updates
             webView.addJavascriptInterface(new Object() {
@@ -110,6 +128,39 @@ public class MainActivity extends BridgeActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void unlockMaxRefreshRate() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            try {
+                Window window = getWindow();
+                if (window != null) {
+                    WindowManager.LayoutParams params = window.getAttributes();
+                    Display display = null;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        display = getDisplay();
+                    } else {
+                        display = window.getWindowManager().getDefaultDisplay();
+                    }
+                    if (display != null) {
+                        Display.Mode[] modes = display.getSupportedModes();
+                        if (modes != null && modes.length > 0) {
+                            Display.Mode bestMode = modes[0];
+                            for (Display.Mode mode : modes) {
+                                if (mode.getRefreshRate() > bestMode.getRefreshRate()) {
+                                    bestMode = mode;
+                                }
+                            }
+                            params.preferredDisplayModeId = bestMode.getModeId();
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                params.preferredRefreshRate = bestMode.getRefreshRate();
+                            }
+                            window.setAttributes(params);
+                        }
+                    }
+                }
+            } catch (Exception ignored) {}
         }
     }
 

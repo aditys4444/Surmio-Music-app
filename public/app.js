@@ -2265,7 +2265,12 @@
   }
 
   function openCineVault() {
-    DOM.cineVaultOverlay.classList.add('open');
+    if (DOM.cineVaultOverlay) {
+      DOM.cineVaultOverlay.style.transform = '';
+      DOM.cineVaultOverlay.style.opacity = '';
+      DOM.cineVaultOverlay.style.transition = '';
+      DOM.cineVaultOverlay.classList.add('open');
+    }
     document.body.classList.add('cinevault-open');
     if (DOM.cineVaultPlayer) DOM.cineVaultPlayer.scrollTop = 0;
     if (DOM.dockedPlayerBar) DOM.dockedPlayerBar.style.display = 'none';
@@ -2274,8 +2279,17 @@
   }
 
   function closeCineVault() {
-    DOM.cineVaultOverlay.classList.remove('open');
+    if (DOM.cineVaultOverlay) {
+      DOM.cineVaultOverlay.classList.remove('open');
+    }
     document.body.classList.remove('cinevault-open');
+    setTimeout(() => {
+      if (DOM.cineVaultOverlay && !document.body.classList.contains('cinevault-open')) {
+        DOM.cineVaultOverlay.style.transform = '';
+        DOM.cineVaultOverlay.style.opacity = '';
+        DOM.cineVaultOverlay.style.transition = '';
+      }
+    }, 280);
     if (DOM.dockedPlayerBar) DOM.dockedPlayerBar.style.display = 'flex';
     closeAllDrawers();
   }
@@ -5957,7 +5971,8 @@
     DOM.drawerLinks.forEach((btn) => btn.classList.toggle('active', btn.dataset.nav === viewName));
 
     closeMobileDrawer();
-    DOM.alyvexMain.scrollTop = 0;
+    if (DOM.alyvexMain) DOM.alyvexMain.scrollTop = 0;
+    try { window.scrollTo(0, 0); } catch (_) {}
   }
 
   function setupNavigation() {
@@ -6662,13 +6677,39 @@
   function setupPlayerGestures() {
     const stage = DOM.cvMusicViewport;
     const header = document.querySelector('.cv-top-header');
-    if (!stage) return;
-    stage.style.touchAction = 'none';
+    if (!stage && !header) return;
+
     let start = null;
+    let isDraggingY = false;
 
     function handlePointerDown(event) {
-      if (!event.isPrimary || event.pointerType === 'mouse' || event.target.closest('button, a, input, select, .cv-interactive-seekbar, .cv-slide-drawer')) return;
+      if (!event.isPrimary || event.pointerType === 'mouse') return;
+      if (event.target.closest('button, a, input, select, .cv-interactive-seekbar, .cv-slide-drawer, .cv-menu')) return;
       start = { x: event.clientX, y: event.clientY, time: Date.now(), id: event.pointerId };
+      isDraggingY = false;
+    }
+
+    function handlePointerMove(event) {
+      if (!start || start.id !== event.pointerId) return;
+      const dx = event.clientX - start.x;
+      const dy = event.clientY - start.y;
+
+      if (!isDraggingY) {
+        if (dy > 10 && dy > Math.abs(dx) * 1.1) {
+          isDraggingY = true;
+          try {
+            event.target.setPointerCapture(event.pointerId);
+          } catch (_) {}
+        }
+      }
+
+      if (isDraggingY && DOM.cineVaultOverlay) {
+        const pull = Math.max(0, dy);
+        DOM.cineVaultOverlay.style.transition = 'none';
+        DOM.cineVaultOverlay.style.transform = `translate3d(0, ${pull}px, 0)`;
+        const fade = Math.max(0.35, 1 - (pull / (window.innerHeight * 1.1)));
+        DOM.cineVaultOverlay.style.opacity = `${fade}`;
+      }
     }
 
     function handlePointerUp(event) {
@@ -6676,29 +6717,84 @@
       const dx = event.clientX - start.x;
       const dy = event.clientY - start.y;
       const dt = Date.now() - start.time;
-      start = null;
+      const wasDraggingY = isDraggingY;
 
-      // Vertical swipe down to close/minimize Now Playing
-      if (dy > 65 && Math.abs(dy) > Math.abs(dx) * 1.2 && dt < 600) {
-        closeCineVault();
-        return;
+      try {
+        event.target.releasePointerCapture(event.pointerId);
+      } catch (_) {}
+
+      start = null;
+      isDraggingY = false;
+
+      if (wasDraggingY || (dy > 65 && Math.abs(dy) > Math.abs(dx) * 1.2 && dt < 500)) {
+        if (dy > 85 || (dy > 40 && dt < 300)) {
+          // Smoothly animate dismissal to docked player bar
+          if (DOM.cineVaultOverlay) {
+            DOM.cineVaultOverlay.style.transition = 'transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease';
+            DOM.cineVaultOverlay.style.transform = 'translate3d(0, 100%, 0)';
+            DOM.cineVaultOverlay.style.opacity = '0';
+          }
+          setTimeout(() => {
+            closeCineVault();
+          }, 240);
+          return;
+        } else {
+          // Snap smoothly back up
+          if (DOM.cineVaultOverlay) {
+            DOM.cineVaultOverlay.style.transition = 'transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease';
+            DOM.cineVaultOverlay.style.transform = 'translate3d(0, 0, 0)';
+            DOM.cineVaultOverlay.style.opacity = '1';
+            setTimeout(() => {
+              if (DOM.cineVaultOverlay && document.body.classList.contains('cinevault-open')) {
+                DOM.cineVaultOverlay.style.transition = '';
+                DOM.cineVaultOverlay.style.transform = '';
+                DOM.cineVaultOverlay.style.opacity = '';
+              }
+            }, 230);
+          }
+          return;
+        }
       }
 
-      // Horizontal swipe to navigate songs
+      // Horizontal swipe to navigate songs (next / previous)
       if (Math.abs(dx) >= 60 && Math.abs(dx) > Math.abs(dy) * 1.25 && dt < 600) {
         if (dx < 0) playNextTrack();
         else playPrevTrack();
       }
     }
 
-    stage.addEventListener('pointerdown', handlePointerDown);
-    stage.addEventListener('pointerup', handlePointerUp);
-    stage.addEventListener('pointercancel', () => { start = null; });
+    function handlePointerCancel(event) {
+      if (isDraggingY && DOM.cineVaultOverlay) {
+        DOM.cineVaultOverlay.style.transition = 'transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease';
+        DOM.cineVaultOverlay.style.transform = 'translate3d(0, 0, 0)';
+        DOM.cineVaultOverlay.style.opacity = '1';
+        setTimeout(() => {
+          if (DOM.cineVaultOverlay) {
+            DOM.cineVaultOverlay.style.transition = '';
+            DOM.cineVaultOverlay.style.transform = '';
+            DOM.cineVaultOverlay.style.opacity = '';
+          }
+        }, 230);
+      }
+      try {
+        if (event && event.pointerId) event.target.releasePointerCapture(event.pointerId);
+      } catch (_) {}
+      start = null;
+      isDraggingY = false;
+    }
+
+    if (stage) {
+      stage.addEventListener('pointerdown', handlePointerDown);
+      stage.addEventListener('pointermove', handlePointerMove);
+      stage.addEventListener('pointerup', handlePointerUp);
+      stage.addEventListener('pointercancel', handlePointerCancel);
+    }
 
     if (header) {
       header.addEventListener('pointerdown', handlePointerDown);
+      header.addEventListener('pointermove', handlePointerMove);
       header.addEventListener('pointerup', handlePointerUp);
-      header.addEventListener('pointercancel', () => { start = null; });
+      header.addEventListener('pointercancel', handlePointerCancel);
     }
 
     document.addEventListener('keydown', (event) => {

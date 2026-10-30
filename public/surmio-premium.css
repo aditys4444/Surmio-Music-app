@@ -85,19 +85,37 @@ html, body {
 }
 
 html {
-  scroll-behavior: smooth;
-  overscroll-behavior-y: none;
+  overscroll-behavior-y: contain;
 }
 
 body {
   background: var(--bg-main);
   color: var(--text-primary);
-  overscroll-behavior-y: none;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  -webkit-tap-highlight-color: transparent;
 }
 
-button, input, select {
+button, input, select, textarea {
   font: inherit;
   touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Zero-delay instant tap response and touch action optimization across all components */
+button, input, select, textarea, a, [role="button"],
+.music-card, .spotify-quick-card, .quick-card, .quick-access-item,
+.continue-card, .continue-track-card, .lib-song-row, .download-card,
+.nav-item, .mobile-nav-item, .bottom-nav-btn, .surmio-chip, .alyvex-chip,
+.chip, .filter-chip, .library-chip, .library-filter-chip, .search-pill,
+.search-filter-pill, .hero-badge-pill, .hero-quality-pill, .playlist-card,
+.playlist-card-item, .artist-card-item, .artist-card, .settings-card,
+.setting-row, .topbar-btn, .control-btn, .cv-circle-btn, .cv-tool-btn,
+.cv-aux-btn, .cv-primary-play-btn, .tool-btn, .quick-card-play-btn,
+.docked-player-bar, .playback-bar-container, .mini-track-meta,
+.drawer-link, .cv-btn-pill, .song-opt-btn, .tab-btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 button {
@@ -2319,16 +2337,31 @@ html, body {
   border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 
-/* Adaptive Now Playing Full View */
+/* Adaptive Now Playing Full View with Hardware Composited Smooth Transitions */
 .cinevault-overlay {
   position: fixed !important;
   inset: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
   height: 100dvh !important;
-  z-index: 200 !important;
+  z-index: 9999 !important;
   background: var(--bg-main) !important;
   overflow: hidden !important;
+  display: flex !important;
+  transform: translate3d(0, 100%, 0) !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease, visibility 0.28s !important;
+  will-change: transform, opacity;
+}
+
+body.cinevault-open .cinevault-overlay {
+  animation: none !important;
+  transform: translate3d(0, 0, 0) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
 }
 
 .cinevault-unified-player {
@@ -2343,6 +2376,7 @@ html, body {
   overflow-y: auto !important;
   -webkit-overflow-scrolling: touch !important;
   box-sizing: border-box !important;
+  touch-action: pan-y;
 }
 
 .music-artwork-card {
@@ -2368,8 +2402,41 @@ html, body {
   .cv-primary-play-btn { width: 58px !important; height: 58px !important; }
 }
 
-/* Hardware accelerated smooth touch scrolling */
-.music-card-grid, .continue-listening-grid, .spotify-quick-grid, .surmio-main {
+/* Off-screen rendering containment for buttery 60/90/120fps scrolling */
+.music-card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 240px;
+}
+
+.lib-song-row {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 54px;
+}
+
+.continue-card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 110px;
+}
+
+.download-card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 76px;
+}
+
+.playlist-card, .playlist-card-item {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 190px;
+}
+
+.artist-card-item {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 180px;
+}
+
+/* Hardware accelerated smooth touch scrolling and layer isolation */
+.music-card-grid, .continue-listening-grid, .spotify-quick-grid, .surmio-main,
+.library-table-body, .playlists-grid, .downloads-list-grid, .search-results-grid {
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
+  contain: layout style;
 }
