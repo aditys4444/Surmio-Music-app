@@ -10,724 +10,640 @@
   // ==========================================
   const EMBEDDED_CATALOG = [
   {
-    "id": "ymusic-O5gwxm3NxFU",
-    "title": "Best Of Arijit Singh 2024 | Arijit Singh Hits Songs | Arijit Singh Jukebox Songs | Indian Songs",
-    "author": "ABT Lofi Music",
-    "duration": "1:00:52",
-    "thumbnail": "https://i.ytimg.com/vi/O5gwxm3NxFU/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCoDIBhWWo04eVze0OLd9jxeC5sVQ",
-    "streamUrl": "https://www.youtube.com/embed/O5gwxm3NxFU?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=O5gwxm3NxFU",
-    "category": "Bollywood",
-    "isYouTube": true,
-    "youtubeId": "O5gwxm3NxFU",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by ABT Lofi Music",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ Best Of Arijit Singh 2024 | Arijit Singh Hits Songs | Arijit Singh Jukebox Songs | Indian Songs ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: ABT Lofi Music"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
-  },
-  {
-    "id": "ymusic-Q5iAkhkumcY",
-    "title": "Best Romantic Songs by Arijit Singh | Top 13 Love Hits",
-    "author": "Bolly Archive",
-    "duration": "58:50",
-    "thumbnail": "https://i.ytimg.com/vi/Q5iAkhkumcY/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDVGfhjBhU0XT1xAkBNDHDeIkN3rA",
-    "streamUrl": "https://www.youtube.com/embed/Q5iAkhkumcY?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=Q5iAkhkumcY",
-    "category": "Bollywood",
-    "isYouTube": true,
-    "youtubeId": "Q5iAkhkumcY",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by Bolly Archive",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ Best Romantic Songs by Arijit Singh | Top 13 Love Hits ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: Bolly Archive"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
-  },
-  {
-    "id": "ymusic-MJyKN-8UncM",
-    "title": "Shayad - Love Aaj Kal | Kartik | Sara | Arushi | Pritam | Arijit Singh",
-    "author": "Sony Music India",
-    "duration": "3:10",
-    "thumbnail": "https://i.ytimg.com/vi/MJyKN-8UncM/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBPkEH_8B2JsZu3fdfYf8UY0PifHg",
-    "streamUrl": "https://www.youtube.com/embed/MJyKN-8UncM?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=MJyKN-8UncM",
-    "category": "Bollywood",
-    "isYouTube": true,
-    "youtubeId": "MJyKN-8UncM",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by Sony Music India",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ Shayad - Love Aaj Kal | Kartik | Sara | Arushi | Pritam | Arijit Singh ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: Sony Music India"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
-  },
-  {
-    "id": "ymusic-00DvaPstcpo",
-    "title": "LONG DRIVE Bollywood Mix - Arijit Singh | Full Album | 2 Hour Nonstop | Apna Bana Le, Zaalima & More",
-    "author": "Bollywood Chartbusters",
-    "duration": "1:55:45",
-    "thumbnail": "https://i.ytimg.com/vi/00DvaPstcpo/hq720.jpg?sqp=-oaymwE2CNAFEJQDSFXyq4qpAygIARUAAIhCGAFwAcABBvABAfgB_gmAAtAFigIMCAAQARh_IBMoHDAP&rs=AOn4CLA_xN2BYzV4949V5DpUG111IWyifw",
-    "streamUrl": "https://www.youtube.com/embed/00DvaPstcpo?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=00DvaPstcpo",
-    "category": "Bollywood",
-    "isYouTube": true,
-    "youtubeId": "00DvaPstcpo",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by Bollywood Chartbusters",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ LONG DRIVE Bollywood Mix - Arijit Singh | Full Album | 2 Hour Nonstop | Apna Bana Le, Zaalima & More ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: Bollywood Chartbusters"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
-  },
-  {
-    "id": "ymusic-yALvgZi-84o",
-    "title": "Namo Namo - Lyrical | Kedarnath | Sushant Rajput | Sara Ali Khan | Amit Trivedi | Amitabh B",
-    "author": "Bollywood Chartbusters",
-    "duration": "5:29",
-    "thumbnail": "https://i.ytimg.com/vi/yALvgZi-84o/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDetURx9-1l0LyDsoneUtsdg-M7tw",
-    "streamUrl": "https://www.youtube.com/embed/yALvgZi-84o?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=yALvgZi-84o",
-    "category": "Devotional / Bhakti",
-    "isYouTube": true,
-    "youtubeId": "yALvgZi-84o",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by Bollywood Chartbusters",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ Namo Namo - Lyrical | Kedarnath | Sushant Rajput | Sara Ali Khan | Amit Trivedi | Amitabh B ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: Bollywood Chartbusters"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
-  },
-  {
-    "id": "ymusic-sX2bYV6nSy4",
-    "title": "हनुमान चालीसा फुल - शेखर रावजियानी | वीडियो सांग व लिरिक्स | हिंदी भक्ति सांग | भजन | आरती",
-    "author": "Zee Music Company",
-    "duration": "9:10",
-    "thumbnail": "https://i.ytimg.com/vi/sX2bYV6nSy4/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLAekQ_y0zTwXHozoVpKeye_ojIKXQ",
-    "streamUrl": "https://www.youtube.com/embed/sX2bYV6nSy4?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=sX2bYV6nSy4",
-    "category": "Devotional / Bhakti",
-    "isYouTube": true,
-    "youtubeId": "sX2bYV6nSy4",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by Zee Music Company",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ हनुमान चालीसा फुल - शेखर रावजियानी | वीडियो सांग व लिरिक्स | हिंदी भक्ति सांग | भजन | आरती ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: Zee Music Company"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
-  },
-  {
-    "id": "ymusic-3WrImrl2dmI",
-    "title": "4AM Chalisa - Krishna Das Live! Songs With Lyrics",
-    "author": "Krishna Das Music",
-    "duration": "9:25",
-    "thumbnail": "https://i.ytimg.com/vi/3WrImrl2dmI/hqdefault.jpg?sqp=-oaymwEcCOADEI4CSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCYCIVddmg6T9H_PAeI3DU67pcqHQ",
-    "streamUrl": "https://www.youtube.com/embed/3WrImrl2dmI?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=3WrImrl2dmI",
-    "category": "Devotional / Bhakti",
-    "isYouTube": true,
-    "youtubeId": "3WrImrl2dmI",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by Krishna Das Music",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ 4AM Chalisa - Krishna Das Live! Songs With Lyrics ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: Krishna Das Music"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
-  },
-  {
-    "id": "ymusic-xdtHK7AJINA",
-    "title": "Superfast Breathless Hanuman Chalisa Shankar Mahadevan | Hanuman Chalisa New Version | हनुमान चालीसा",
-    "author": "Shemaroo Bhakti",
-    "duration": "3:49",
-    "thumbnail": "https://i.ytimg.com/vi/xdtHK7AJINA/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLAOrJoEZgcUDW5KpnwSf7IIVdXHxg",
-    "streamUrl": "https://www.youtube.com/embed/xdtHK7AJINA?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=xdtHK7AJINA",
-    "category": "Devotional / Bhakti",
-    "isYouTube": true,
-    "youtubeId": "xdtHK7AJINA",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by Shemaroo Bhakti",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ Superfast Breathless Hanuman Chalisa Shankar Mahadevan | Hanuman Chalisa New Version | हनुमान चालीसा ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: Shemaroo Bhakti"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
-  },
-  {
-    "id": "ymusic-lnYlFPIRuQI",
-    "title": "BALLER X BROWN MUNDE X DOGAR - REMIX | SHUBH | SIDHU MOOSE WALA | AP DHILLON | SAINI63",
-    "author": "SAINI63",
-    "duration": "3:02",
-    "thumbnail": "https://i.ytimg.com/vi/lnYlFPIRuQI/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB2PxNDxGfCdvfaPLahdSCiBHQilQ",
-    "streamUrl": "https://www.youtube.com/embed/lnYlFPIRuQI?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=lnYlFPIRuQI",
+    "id": "ymusic-3j7bhOvW6jw",
+    "youtubeId": "3j7bhOvW6jw",
+    "title": "Low Fade",
+    "author": "Karan Aujla",
     "category": "Punjabi",
-    "isYouTube": true,
-    "youtubeId": "lnYlFPIRuQI",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by SAINI63",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ BALLER X BROWN MUNDE X DOGAR - REMIX | SHUBH | SIDHU MOOSE WALA | AP DHILLON | SAINI63 ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: SAINI63"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
-  },
-  {
-    "id": "ymusic-4tywp83zkmk",
-    "title": "Shubh - Cheques",
-    "author": "SHUBH",
-    "duration": "3:09",
-    "thumbnail": "https://i.ytimg.com/vi/4tywp83zkmk/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBjk2cgGtF1hvwhS_hkkWBPqhrkig",
-    "streamUrl": "https://www.youtube.com/embed/4tywp83zkmk?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=4tywp83zkmk",
-    "category": "Punjabi",
-    "isYouTube": true,
-    "youtubeId": "4tywp83zkmk",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by SHUBH",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ Shubh - Cheques (Official Music Video) ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: SHUBH"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
-  },
-  {
-    "id": "ymusic-VNs_cCtdbPc",
-    "title": "BROWN MUNDE - AP DHILLON | GURINDER GILL | SHINDA KAHLON",
-    "author": "APDHILLON",
-    "duration": "4:28",
-    "thumbnail": "https://i.ytimg.com/vi/VNs_cCtdbPc/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLD9YH-_pflXCvi6jkHbAipyedDtFg",
-    "streamUrl": "https://www.youtube.com/embed/VNs_cCtdbPc?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=VNs_cCtdbPc",
-    "category": "Punjabi",
-    "isYouTube": true,
-    "youtubeId": "VNs_cCtdbPc",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by APDHILLON",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ BROWN MUNDE - AP DHILLON | GURINDER GILL | SHINDA KAHLON (Official Music Video) ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: APDHILLON"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
-  },
-  {
-    "id": "ymusic-LmpL_rrT8ho",
-    "title": "BALLER X DOGGER - REMIX | SHUBH | SIDHU MOOSE WALA | AP DHILLON | DJ SUMIT RAJWANSHI",
-    "author": "SR Music Official ",
-    "duration": "3:23",
-    "thumbnail": "https://i.ytimg.com/vi/LmpL_rrT8ho/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCGVAmdZ14Eies2fsZiy72FXYeAbA",
-    "streamUrl": "https://www.youtube.com/embed/LmpL_rrT8ho?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=LmpL_rrT8ho",
-    "category": "Punjabi",
-    "isYouTube": true,
-    "youtubeId": "LmpL_rrT8ho",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by SR Music Official ",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ BALLER X DOGGER - REMIX | SHUBH | SIDHU MOOSE WALA | AP DHILLON | DJ SUMIT RAJWANSHI ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: SR Music Official "
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
-  },
-  {
-    "id": "ymusic-vgKdf8ktVtU",
-    "title": "honey singh songs || honey singh latest songs || new honey singh songs || yo yo honey singh song ||",
-    "author": "Feel The Music -GP 🎶 ",
-    "duration": "29:03",
-    "thumbnail": "https://i.ytimg.com/vi/vgKdf8ktVtU/hq720.jpg?sqp=-oaymwE2CNAFEJQDSFXyq4qpAygIARUAAIhCGAFwAcABBvABAfgB_gmAAtAFigIMCAAQARhlIFMoRjAP&rs=AOn4CLC5eKe_217Ekeo10TRBfBvmVwnCBQ",
-    "streamUrl": "https://www.youtube.com/embed/vgKdf8ktVtU?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=vgKdf8ktVtU",
-    "category": "Yo Yo Honey Singh",
-    "isYouTube": true,
-    "youtubeId": "vgKdf8ktVtU",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by Feel The Music -GP 🎶 ",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ honey singh songs || honey singh latest songs || new honey singh songs || yo yo honey singh song || ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: Feel The Music -GP 🎶 "
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
-  },
-  {
-    "id": "ymusic-3FDHTXztYZ8",
-    "title": "Best hit song yo yo honey singh.  honey singh new song 2024. 😲🔥🔥",
-    "author": "Trending music ",
-    "duration": "29:29",
-    "thumbnail": "https://i.ytimg.com/vi/3FDHTXztYZ8/hqdefault.jpg?sqp=-oaymwE2COADEI4CSFXyq4qpAygIARUAAIhCGAFwAcABBvABAfgB0gaAAuADigIMCAAQARhlIFYoUzAP&rs=AOn4CLBzK03YxwthmOR76Qekahrn9pp7KA",
-    "streamUrl": "https://www.youtube.com/embed/3FDHTXztYZ8?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=3FDHTXztYZ8",
-    "category": "Yo Yo Honey Singh",
-    "isYouTube": true,
-    "youtubeId": "3FDHTXztYZ8",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by Trending music ",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ Best hit song yo yo honey singh.  honey singh new song 2024. 😲🔥🔥 ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: Trending music "
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
-  },
-  {
-    "id": "ymusic-MfY9YO3u7GM",
-    "title": "Brown Rang  | Yo Yo Honey Singh | Full Song | Latest Punjabi Song 2026",
-    "author": "Speed Records",
     "duration": "2:59",
-    "thumbnail": "https://i.ytimg.com/vi/MfY9YO3u7GM/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLA1xuNp8EPoJTQ6M9osHwggISZXAQ",
-    "streamUrl": "https://www.youtube.com/embed/MfY9YO3u7GM?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=MfY9YO3u7GM",
-    "category": "Yo Yo Honey Singh",
+    "thumbnail": "https://i.ytimg.com/vi/3j7bhOvW6jw/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/3j7bhOvW6jw.m4a",
     "isYouTube": true,
-    "youtubeId": "MfY9YO3u7GM",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by Speed Records",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ Brown Rang (8K Video) | Yo Yo Honey Singh | Full Song | Latest Punjabi Song 2026 ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: Speed Records"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
+    "views": "45M+ plays"
   },
   {
-    "id": "ymusic-9HA5RZx-rTg",
-    "title": "Yo Yo Honey Singh's BEST PARTY SONGS | HINDI SONGS 2016 | BOLLYWOOD PARTY SONGS |T-SERIES",
-    "author": "T-Series",
-    "duration": "1:23:33",
-    "thumbnail": "https://i.ytimg.com/vi/9HA5RZx-rTg/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB8jZeoRPJ_8IQFTjhm-EjbWcOb0g",
-    "streamUrl": "https://www.youtube.com/embed/9HA5RZx-rTg?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=9HA5RZx-rTg",
-    "category": "Yo Yo Honey Singh",
+    "id": "ymusic-gPpQNzQP6gE",
+    "youtubeId": "gPpQNzQP6gE",
+    "title": "Nadaaniyan",
+    "author": "Akshath",
+    "category": "Bollywood",
+    "duration": "2:48",
+    "thumbnail": "https://i.ytimg.com/vi/gPpQNzQP6gE/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/gPpQNzQP6gE.m4a",
     "isYouTube": true,
-    "youtubeId": "9HA5RZx-rTg",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by T-Series",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ Yo Yo Honey Singh's BEST PARTY SONGS (22 Videos)| HINDI SONGS 2016 | BOLLYWOOD PARTY SONGS |T-SERIES ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: T-Series"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
+    "views": "80M+ plays"
   },
   {
-    "id": "ymusic-n61ULEU7CO0",
-    "title": "Best of lofi hip hop 2021 ✨ [beats to relax/study to]",
-    "author": "Lofi Girl",
-    "duration": "6:10:58",
-    "thumbnail": "https://i.ytimg.com/vi/n61ULEU7CO0/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLAi4TCpAtbxLFIBULRlcZHudl1uFw&usqp=CBQ",
-    "streamUrl": "https://www.youtube.com/embed/n61ULEU7CO0?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=n61ULEU7CO0",
-    "category": "Lofi & Chill",
+    "id": "ymusic-TyMUY2CDrjc",
+    "youtubeId": "TyMUY2CDrjc",
+    "title": "Haareya",
+    "author": "Arijit Singh",
+    "category": "Bollywood",
+    "duration": "3:20",
+    "thumbnail": "https://i.ytimg.com/vi/TyMUY2CDrjc/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/TyMUY2CDrjc.m4a",
     "isYouTube": true,
-    "youtubeId": "n61ULEU7CO0",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by Lofi Girl",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ Best of lofi hip hop 2021 ✨ [beats to relax/study to] ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: Lofi Girl"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
+    "views": "120M+ plays"
   },
   {
-    "id": "ymusic-lTRiuFIWV54",
-    "title": "1 A.M Study Session 📚 [lofi hip hop]",
-    "author": "Lofi Girl",
-    "duration": "1:01:14",
-    "thumbnail": "https://i.ytimg.com/vi/lTRiuFIWV54/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLAq8gHVPtzHjHLuLO3_wVOk1BLifw&usqp=CBQ",
-    "streamUrl": "https://www.youtube.com/embed/lTRiuFIWV54?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=lTRiuFIWV54",
-    "category": "Lofi & Chill",
+    "id": "ymusic-Y9ozt29tzgs",
+    "youtubeId": "Y9ozt29tzgs",
+    "title": "Naino Ne Baandhi",
+    "author": "Yasser Desai & Arko",
+    "category": "Bollywood",
+    "duration": "4:12",
+    "thumbnail": "https://i.ytimg.com/vi/Y9ozt29tzgs/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/Y9ozt29tzgs.m4a",
     "isYouTube": true,
-    "youtubeId": "lTRiuFIWV54",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by Lofi Girl",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ 1 A.M Study Session 📚 [lofi hip hop] ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: Lofi Girl"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
+    "views": "95M+ plays"
   },
   {
-    "id": "ymusic-rFZHOHl-L8A",
-    "title": "lofi hip hop radio 📚 beats to relax/study to",
-    "author": "Lofi Girl",
-    "duration": "Track",
-    "thumbnail": "https://i.ytimg.com/vi/rFZHOHl-L8A/hq720.jpg?v=6aac24f4&sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCdekX1ygqqUJynjbliA5ayfR7tlw&usqp=CBQ",
-    "streamUrl": "https://www.youtube.com/embed/rFZHOHl-L8A?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=rFZHOHl-L8A",
-    "category": "Lofi & Chill",
+    "id": "ymusic-1XFq4tgqJ5g",
+    "youtubeId": "1XFq4tgqJ5g",
+    "title": "Aarambh Hai Prachand",
+    "author": "Piyush Mishra",
+    "category": "Bollywood",
+    "duration": "4:56",
+    "thumbnail": "https://i.ytimg.com/vi/1XFq4tgqJ5g/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/1XFq4tgqJ5g.m4a",
     "isYouTube": true,
-    "youtubeId": "rFZHOHl-L8A",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by Lofi Girl",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ lofi hip hop radio 📚 beats to relax/study to ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: Lofi Girl"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
+    "views": "110M+ plays"
   },
   {
-    "id": "ymusic-_jH2oTNRe7g",
-    "title": "cozy autumn music 🍂 lofi beats to study / relax to",
-    "author": "Lofi Girl",
-    "duration": "1:04:42",
-    "thumbnail": "https://i.ytimg.com/vi/_jH2oTNRe7g/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDgBCjNCUbZYMoNRSMDoOB_IXGGTg&usqp=CBQ",
-    "streamUrl": "https://www.youtube.com/embed/_jH2oTNRe7g?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=_jH2oTNRe7g",
-    "category": "Lofi & Chill",
+    "id": "ymusic-BLlTFapgvOo",
+    "youtubeId": "BLlTFapgvOo",
+    "title": "Shree Hanuman Chalisa (Lo-Fi)",
+    "author": "Rasraj Ji Maharaj",
+    "category": "Devotional / Bhakti",
+    "duration": "4:35",
+    "thumbnail": "https://i.ytimg.com/vi/BLlTFapgvOo/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/BLlTFapgvOo.m4a",
     "isYouTube": true,
-    "youtubeId": "_jH2oTNRe7g",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by Lofi Girl",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ cozy autumn music 🍂 lofi beats to study / relax to ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: Lofi Girl"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
+    "views": "60M+ plays"
   },
   {
-    "id": "ymusic-mOivOlP9GRk",
-    "title": "Alan Walker vs Coldplay - Hymn For The Weekend [Remix]",
-    "author": "Alan Walker",
-    "duration": "3:51",
-    "thumbnail": "https://i.ytimg.com/vi/mOivOlP9GRk/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBxIgF1wXq_Kq5jIAVhdCGA8I-jiQ",
-    "streamUrl": "https://www.youtube.com/embed/mOivOlP9GRk?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=mOivOlP9GRk",
-    "category": "Electronic / EDM",
+    "id": "ymusic-cToCInaGzCw",
+    "youtubeId": "cToCInaGzCw",
+    "title": "Shree Hari Stotram",
+    "author": "Agam Aggarwal",
+    "category": "Devotional / Bhakti",
+    "duration": "5:10",
+    "thumbnail": "https://i.ytimg.com/vi/cToCInaGzCw/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/cToCInaGzCw.m4a",
     "isYouTube": true,
-    "youtubeId": "mOivOlP9GRk",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by Alan Walker",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ Alan Walker vs Coldplay - Hymn For The Weekend [Remix] ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: Alan Walker"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
+    "views": "40M+ plays"
   },
   {
-    "id": "ymusic-wJnBTPUQS5A",
-    "title": "Alan Walker - The Spectre",
-    "author": "Alan Walker",
+    "id": "ymusic-PGwXZqviGyg",
+    "youtubeId": "PGwXZqviGyg",
+    "title": "Kaalbhairav Ashtakam",
+    "author": "Agam Aggarwal",
+    "category": "Devotional / Bhakti",
+    "duration": "4:48",
+    "thumbnail": "https://i.ytimg.com/vi/PGwXZqviGyg/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/PGwXZqviGyg.m4a",
+    "isYouTube": true,
+    "views": "35M+ plays"
+  },
+  {
+    "id": "ymusic-DgBqq6D07Gc",
+    "youtubeId": "DgBqq6D07Gc",
+    "title": "Hamare Sath Shri Raghunath",
+    "author": "Nova Spiritual India",
+    "category": "Devotional / Bhakti",
+    "duration": "8:05",
+    "thumbnail": "https://i.ytimg.com/vi/DgBqq6D07Gc/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/DgBqq6D07Gc.m4a",
+    "isYouTube": true,
+    "views": "50M+ plays"
+  },
+  {
+    "id": "ymusic-z9e_lVCDPes",
+    "youtubeId": "z9e_lVCDPes",
+    "title": "Hari Sundar Nand Mukunda",
+    "author": "Nova Spiritual India",
+    "category": "Devotional / Bhakti",
+    "duration": "8:20",
+    "thumbnail": "https://i.ytimg.com/vi/z9e_lVCDPes/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/z9e_lVCDPes.m4a",
+    "isYouTube": true,
+    "views": "42M+ plays"
+  },
+  {
+    "id": "ymusic-il_1aAQnV_M",
+    "youtubeId": "il_1aAQnV_M",
+    "title": "Krishna Trance",
+    "author": "Kaala Bhairava",
+    "category": "Devotional / Bhakti",
+    "duration": "2:58",
+    "thumbnail": "https://i.ytimg.com/vi/il_1aAQnV_M/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/il_1aAQnV_M.m4a",
+    "isYouTube": true,
+    "views": "28M+ plays"
+  },
+  {
+    "id": "ymusic-KJF8t-BWVRM",
+    "youtubeId": "KJF8t-BWVRM",
+    "title": "Gajanana",
+    "author": "Sukhwinder Singh",
+    "category": "Devotional / Bhakti",
+    "duration": "3:34",
+    "thumbnail": "https://i.ytimg.com/vi/KJF8t-BWVRM/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/KJF8t-BWVRM.m4a",
+    "isYouTube": true,
+    "views": "22M+ plays"
+  },
+  {
+    "id": "ymusic-cEp7pHLl3nc",
+    "youtubeId": "cEp7pHLl3nc",
+    "title": "Roar Of Narsimha",
+    "author": "Sam C.S.",
+    "category": "Devotional / Bhakti",
+    "duration": "2:09",
+    "thumbnail": "https://i.ytimg.com/vi/cEp7pHLl3nc/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/cEp7pHLl3nc.m4a",
+    "isYouTube": true,
+    "views": "18M+ plays"
+  },
+  {
+    "id": "ymusic-trfD6z05vLE",
+    "youtubeId": "trfD6z05vLE",
+    "title": "Jatajoot (जटाजूट)",
+    "author": "Narci & Abhilipsa Panda",
+    "category": "Devotional / Bhakti",
+    "duration": "4:24",
+    "thumbnail": "https://i.ytimg.com/vi/trfD6z05vLE/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/trfD6z05vLE.m4a",
+    "isYouTube": true,
+    "views": "30M+ plays"
+  },
+  {
+    "id": "ymusic-tRScKDcYxlk",
+    "youtubeId": "tRScKDcYxlk",
+    "title": "Jaikal Mahakal",
+    "author": "Amit Trivedi",
+    "category": "Devotional / Bhakti",
+    "duration": "4:36",
+    "thumbnail": "https://i.ytimg.com/vi/tRScKDcYxlk/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/tRScKDcYxlk.m4a",
+    "isYouTube": true,
+    "views": "25M+ plays"
+  },
+  {
+    "id": "ymusic-_GaME4Sx6rM",
+    "youtubeId": "_GaME4Sx6rM",
+    "title": "Devotional Mashup",
+    "author": "Shreyashhh",
+    "category": "Devotional / Bhakti",
+    "duration": "3:12",
+    "thumbnail": "https://i.ytimg.com/vi/_GaME4Sx6rM/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/_GaME4Sx6rM.m4a",
+    "isYouTube": true,
+    "views": "15M+ plays"
+  },
+  {
+    "id": "ymusic-WGixRvyCR00",
+    "youtubeId": "WGixRvyCR00",
+    "title": "Lahore",
+    "author": "Gulab Sidhu",
+    "category": "Punjabi",
+    "duration": "3:54",
+    "thumbnail": "https://i.ytimg.com/vi/WGixRvyCR00/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/WGixRvyCR00.m4a",
+    "isYouTube": true,
+    "views": "38M+ plays"
+  },
+  {
+    "id": "ymusic-XqjgW_o66DU",
+    "youtubeId": "XqjgW_o66DU",
+    "title": "Haryana To Punjab",
+    "author": "Kaka X Jerry",
+    "category": "Punjabi",
+    "duration": "2:56",
+    "thumbnail": "https://i.ytimg.com/vi/XqjgW_o66DU/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/XqjgW_o66DU.m4a",
+    "isYouTube": true,
+    "views": "44M+ plays"
+  },
+  {
+    "id": "ymusic-1XB0odQj_1A",
+    "youtubeId": "1XB0odQj_1A",
+    "title": "Lofar",
+    "author": "Masoom Sharma",
+    "category": "Haryanvi",
+    "duration": "2:07",
+    "thumbnail": "https://i.ytimg.com/vi/1XB0odQj_1A/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/1XB0odQj_1A.m4a",
+    "isYouTube": true,
+    "views": "55M+ plays"
+  },
+  {
+    "id": "ymusic-69-yupf0pAY",
+    "youtubeId": "69-yupf0pAY",
+    "title": "Knife Brows",
+    "author": "Dhanda Nyoliwala",
+    "category": "Haryanvi",
+    "duration": "3:15",
+    "thumbnail": "https://i.ytimg.com/vi/69-yupf0pAY/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/69-yupf0pAY.m4a",
+    "isYouTube": true,
+    "views": "32M+ plays"
+  },
+  {
+    "id": "ymusic-AsdEIaw9Wks",
+    "youtubeId": "AsdEIaw9Wks",
+    "title": "Mithe Tere Bol Pari",
+    "author": "Masoom Sharma",
+    "category": "Haryanvi",
+    "duration": "2:52",
+    "thumbnail": "https://i.ytimg.com/vi/AsdEIaw9Wks/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/AsdEIaw9Wks.m4a",
+    "isYouTube": true,
+    "views": "26M+ plays"
+  },
+  {
+    "id": "ymusic-AUNY8KdWIOg",
+    "youtubeId": "AUNY8KdWIOg",
+    "title": "Haryanvi",
+    "author": "Vikram Malik",
+    "category": "Haryanvi",
+    "duration": "3:22",
+    "thumbnail": "https://i.ytimg.com/vi/AUNY8KdWIOg/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/AUNY8KdWIOg.m4a",
+    "isYouTube": true,
+    "views": "19M+ plays"
+  },
+  {
+    "id": "ymusic-HixNs6ws0qc",
+    "youtubeId": "HixNs6ws0qc",
+    "title": "Moka Soka",
+    "author": "Ajay Hooda",
+    "category": "Haryanvi",
+    "duration": "3:26",
+    "thumbnail": "https://i.ytimg.com/vi/HixNs6ws0qc/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/HixNs6ws0qc.m4a",
+    "isYouTube": true,
+    "views": "24M+ plays"
+  },
+  {
+    "id": "ymusic-KupZ-mEm6QY",
+    "youtubeId": "KupZ-mEm6QY",
+    "title": "Haryana Roadways",
+    "author": "Badshah & Fazilpuria",
+    "category": "Haryanvi",
+    "duration": "3:34",
+    "thumbnail": "https://i.ytimg.com/vi/KupZ-mEm6QY/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/KupZ-mEm6QY.m4a",
+    "isYouTube": true,
+    "views": "70M+ plays"
+  },
+  {
+    "id": "ymusic-LmIL-Reuo1I",
+    "youtubeId": "LmIL-Reuo1I",
+    "title": "Chhore Haryana Ke",
+    "author": "Armaan Malik",
+    "category": "Haryanvi",
     "duration": "3:27",
-    "thumbnail": "https://i.ytimg.com/vi/wJnBTPUQS5A/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBujtuLgc52tiHQRt1okRDNQ4swOQ",
-    "streamUrl": "https://www.youtube.com/embed/wJnBTPUQS5A?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=wJnBTPUQS5A",
-    "category": "Electronic / EDM",
+    "thumbnail": "https://i.ytimg.com/vi/LmIL-Reuo1I/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/LmIL-Reuo1I.m4a",
     "isYouTube": true,
-    "youtubeId": "wJnBTPUQS5A",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by Alan Walker",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ Alan Walker - The Spectre ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: Alan Walker"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
+    "views": "16M+ plays"
   },
   {
-    "id": "ymusic-HFvjFC-YmHE",
-    "title": "Alan Walker, Dua Lipa, Coldplay, Martin Garrix & Kygo, The Chainsmokers Style 🔥 Summer Vibes #1",
-    "author": "Chase The Deep",
-    "duration": "1:56:42",
-    "thumbnail": "https://i.ytimg.com/vi/HFvjFC-YmHE/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBDXrR_MY9Fi8qnm5yXEz8jefkAjg",
-    "streamUrl": "https://www.youtube.com/embed/HFvjFC-YmHE?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=HFvjFC-YmHE",
-    "category": "Electronic / EDM",
+    "id": "ymusic-MWPocPcL4SA",
+    "youtubeId": "MWPocPcL4SA",
+    "title": "Haryana Role",
+    "author": "Ammy Chahar",
+    "category": "Haryanvi",
+    "duration": "3:16",
+    "thumbnail": "https://i.ytimg.com/vi/MWPocPcL4SA/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/MWPocPcL4SA.m4a",
     "isYouTube": true,
-    "youtubeId": "HFvjFC-YmHE",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by Chase The Deep",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ Alan Walker, Dua Lipa, Coldplay, Martin Garrix & Kygo, The Chainsmokers Style 🔥 Summer Vibes #1 ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: Chase The Deep"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
+    "views": "14M+ plays"
   },
   {
-    "id": "ymusic-HhjHYkPQ8F0",
-    "title": "Alan Walker & Ava Max - Alone, Pt. II",
-    "author": "Alan Walker",
-    "duration": "4:06",
-    "thumbnail": "https://i.ytimg.com/vi/HhjHYkPQ8F0/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDMchet0_oSvRkm-HXGSWM_uWZY3Q",
-    "streamUrl": "https://www.youtube.com/embed/HhjHYkPQ8F0?autoplay=1&enablejsapi=1",
-    "sourceUrl": "https://www.youtube.com/watch?v=HhjHYkPQ8F0",
-    "category": "Electronic / EDM",
+    "id": "ymusic-ou-litQ9hWQ",
+    "youtubeId": "ou-litQ9hWQ",
+    "title": "Solid Body",
+    "author": "Ajay Hooda & Raju Punjabi",
+    "category": "Haryanvi",
+    "duration": "3:05",
+    "thumbnail": "https://i.ytimg.com/vi/ou-litQ9hWQ/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/ou-litQ9hWQ.m4a",
     "isYouTube": true,
-    "youtubeId": "HhjHYkPQ8F0",
-    "hasVideo": true,
-    "views": "100M+ views",
-    "description": "Real YMusic stream by Alan Walker",
-    "fallbackUrl": "/media/oceans.mp4",
-    "lyrics": [
-      {
-        "time": 0,
-        "text": "♪ Alan Walker & Ava Max - Alone, Pt. II ♪"
-      },
-      {
-        "time": 15,
-        "text": "Artist: Alan Walker"
-      },
-      {
-        "time": 30,
-        "text": "Streaming live from YMusic network"
-      }
-    ]
+    "views": "90M+ plays"
+  },
+  {
+    "id": "ymusic-qeVUGnke9ko",
+    "youtubeId": "qeVUGnke9ko",
+    "title": "Haryana Hood",
+    "author": "Irshad Khan",
+    "category": "Haryanvi",
+    "duration": "4:04",
+    "thumbnail": "https://i.ytimg.com/vi/qeVUGnke9ko/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/qeVUGnke9ko.m4a",
+    "isYouTube": true,
+    "views": "12M+ plays"
+  },
+  {
+    "id": "ymusic-QRu_98X8mPQ",
+    "youtubeId": "QRu_98X8mPQ",
+    "title": "Haryana Zone",
+    "author": "Sintaa",
+    "category": "Haryanvi",
+    "duration": "2:43",
+    "thumbnail": "https://i.ytimg.com/vi/QRu_98X8mPQ/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/QRu_98X8mPQ.m4a",
+    "isYouTube": true,
+    "views": "11M+ plays"
+  },
+  {
+    "id": "ymusic-SVgQv_NFftY",
+    "youtubeId": "SVgQv_NFftY",
+    "title": "Husan Haryana Ka",
+    "author": "Annu Kadiyan",
+    "category": "Haryanvi",
+    "duration": "5:54",
+    "thumbnail": "https://i.ytimg.com/vi/SVgQv_NFftY/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/SVgQv_NFftY.m4a",
+    "isYouTube": true,
+    "views": "21M+ plays"
+  },
+  {
+    "id": "ymusic-WBc5i3b-t2c",
+    "youtubeId": "WBc5i3b-t2c",
+    "title": "Chora Haryane Ka Ri Maa",
+    "author": "Ajay Bhagta",
+    "category": "Haryanvi",
+    "duration": "3:46",
+    "thumbnail": "https://i.ytimg.com/vi/WBc5i3b-t2c/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/WBc5i3b-t2c.m4a",
+    "isYouTube": true,
+    "views": "17M+ plays"
+  },
+  {
+    "id": "ymusic-WleaYCKUzAw",
+    "youtubeId": "WleaYCKUzAw",
+    "title": "Kallo कल्लो",
+    "author": "Ajay Hooda",
+    "category": "Haryanvi",
+    "duration": "3:16",
+    "thumbnail": "https://i.ytimg.com/vi/WleaYCKUzAw/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/WleaYCKUzAw.m4a",
+    "isYouTube": true,
+    "views": "35M+ plays"
+  },
+  {
+    "id": "ymusic-xDMjh6wDL3g",
+    "youtubeId": "xDMjh6wDL3g",
+    "title": "Lofar (Remix)",
+    "author": "Masoom Sharma",
+    "category": "Haryanvi",
+    "duration": "2:12",
+    "thumbnail": "https://i.ytimg.com/vi/xDMjh6wDL3g/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/xDMjh6wDL3g.m4a",
+    "isYouTube": true,
+    "views": "29M+ plays"
+  },
+  {
+    "id": "ymusic-XY12IwddNe8",
+    "youtubeId": "XY12IwddNe8",
+    "title": "Haryane Ka Jaat",
+    "author": "Raju Punjabi",
+    "category": "Haryanvi",
+    "duration": "2:53",
+    "thumbnail": "https://i.ytimg.com/vi/XY12IwddNe8/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/XY12IwddNe8.m4a",
+    "isYouTube": true,
+    "views": "23M+ plays"
+  },
+  {
+    "id": "ymusic-ZeaqjybbzzM",
+    "youtubeId": "ZeaqjybbzzM",
+    "title": "Warning",
+    "author": "Masoom Sharma",
+    "category": "Haryanvi",
+    "duration": "2:58",
+    "thumbnail": "https://i.ytimg.com/vi/ZeaqjybbzzM/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/ZeaqjybbzzM.m4a",
+    "isYouTube": true,
+    "views": "31M+ plays"
+  },
+  {
+    "id": "ymusic-ZvXN0TcZLfQ",
+    "youtubeId": "ZvXN0TcZLfQ",
+    "title": "Fortuner",
+    "author": "Ruchika Jangid & Jaat Nia",
+    "category": "Haryanvi",
+    "duration": "3:01",
+    "thumbnail": "https://i.ytimg.com/vi/ZvXN0TcZLfQ/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/ZvXN0TcZLfQ.m4a",
+    "isYouTube": true,
+    "views": "27M+ plays"
+  },
+  {
+    "id": "ymusic-GSXcYRIF-q0",
+    "youtubeId": "GSXcYRIF-q0",
+    "title": "Nathuniya",
+    "author": "Khesari Lal Yadav & Priyanka Singh",
+    "category": "Bhojpuri",
+    "duration": "3:55",
+    "thumbnail": "https://i.ytimg.com/vi/GSXcYRIF-q0/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/GSXcYRIF-q0.m4a",
+    "isYouTube": true,
+    "views": "130M+ plays"
+  },
+  {
+    "id": "ymusic-vT7x3GG2TRA",
+    "youtubeId": "vT7x3GG2TRA",
+    "title": "Jhankar Payaliya",
+    "author": "Shilpi Raj",
+    "category": "Bhojpuri",
+    "duration": "4:02",
+    "thumbnail": "https://i.ytimg.com/vi/vT7x3GG2TRA/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/vT7x3GG2TRA.m4a",
+    "isYouTube": true,
+    "views": "88M+ plays"
+  },
+  {
+    "id": "ymusic-PvFIGe06HZ8",
+    "youtubeId": "PvFIGe06HZ8",
+    "title": "Dupatta Katal Kare",
+    "author": "Khesari Lal Yadav",
+    "category": "Bhojpuri",
+    "duration": "3:30",
+    "thumbnail": "https://i.ytimg.com/vi/PvFIGe06HZ8/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/PvFIGe06HZ8.m4a",
+    "isYouTube": true,
+    "views": "76M+ plays"
+  },
+  {
+    "id": "ymusic-pd7m819-4P8",
+    "youtubeId": "pd7m819-4P8",
+    "title": "Paache Ke Naache Aaiha",
+    "author": "Pawan Singh",
+    "category": "Bhojpuri",
+    "duration": "3:48",
+    "thumbnail": "https://i.ytimg.com/vi/pd7m819-4P8/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/pd7m819-4P8.m4a",
+    "isYouTube": true,
+    "views": "94M+ plays"
+  },
+  {
+    "id": "ymusic-qE08YrStDNY",
+    "youtubeId": "qE08YrStDNY",
+    "title": "Kamariya Gole Gole Dole",
+    "author": "Neelkamal Singh & Shilpi Raj",
+    "category": "Bhojpuri",
+    "duration": "3:58",
+    "thumbnail": "https://i.ytimg.com/vi/qE08YrStDNY/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/qE08YrStDNY.m4a",
+    "isYouTube": true,
+    "views": "82M+ plays"
+  },
+  {
+    "id": "ymusic-BRQ-n5OYUuM",
+    "youtubeId": "BRQ-n5OYUuM",
+    "title": "Nadi Biche Naiya Dole",
+    "author": "Shilpi Raj & Rani",
+    "category": "Bhojpuri",
+    "duration": "4:21",
+    "thumbnail": "https://i.ytimg.com/vi/BRQ-n5OYUuM/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/BRQ-n5OYUuM.m4a",
+    "isYouTube": true,
+    "views": "65M+ plays"
+  },
+  {
+    "id": "ymusic-c27iffuopV8",
+    "youtubeId": "c27iffuopV8",
+    "title": "Bangliniya",
+    "author": "Khesari Lal Yadav & Antra Singh",
+    "category": "Bhojpuri",
+    "duration": "3:31",
+    "thumbnail": "https://i.ytimg.com/vi/c27iffuopV8/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/c27iffuopV8.m4a",
+    "isYouTube": true,
+    "views": "115M+ plays"
+  },
+  {
+    "id": "ymusic--DsbppjaxZ4",
+    "youtubeId": "-DsbppjaxZ4",
+    "title": "Bangalini Ke Chakkar Mein",
+    "author": "Ujala Sahani",
+    "category": "Bhojpuri",
+    "duration": "4:01",
+    "thumbnail": "https://i.ytimg.com/vi/-DsbppjaxZ4/hqdefault.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/-DsbppjaxZ4.m4a",
+    "isYouTube": true,
+    "views": "37M+ plays"
+  },
+  {
+    "id": "ymusic-xD6N6f-Tm6o",
+    "youtubeId": "xD6N6f-Tm6o",
+    "title": "Bangliniya (Special Mix)",
+    "author": "Khesari Lal Yadav",
+    "category": "Bhojpuri",
+    "duration": "3:33",
+    "thumbnail": "https://i.ytimg.com/vi/xD6N6f-Tm6o/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/xD6N6f-Tm6o.m4a",
+    "isYouTube": true,
+    "views": "48M+ plays"
+  },
+  {
+    "id": "ymusic-_TWW9rZ_H1w",
+    "youtubeId": "_TWW9rZ_H1w",
+    "title": "Bangliniya (Club Edit)",
+    "author": "Khesari Lal Yadav",
+    "category": "Bhojpuri",
+    "duration": "3:32",
+    "thumbnail": "https://i.ytimg.com/vi/_TWW9rZ_H1w/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/_TWW9rZ_H1w.m4a",
+    "isYouTube": true,
+    "views": "40M+ plays"
+  },
+  {
+    "id": "ymusic-JpSFL_bHtBA",
+    "youtubeId": "JpSFL_bHtBA",
+    "title": "Haareya (Acoustic Version)",
+    "author": "Arijit Singh",
+    "category": "Bollywood",
+    "duration": "3:57",
+    "thumbnail": "https://i.ytimg.com/vi/JpSFL_bHtBA/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/JpSFL_bHtBA.m4a",
+    "isYouTube": true,
+    "views": "60M+ plays"
+  },
+  {
+    "id": "ymusic-LB5DhtD59fA",
+    "youtubeId": "LB5DhtD59fA",
+    "title": "Haareya (Studio Reprise)",
+    "author": "Arijit Singh",
+    "category": "Bollywood",
+    "duration": "3:58",
+    "thumbnail": "https://i.ytimg.com/vi/LB5DhtD59fA/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/LB5DhtD59fA.m4a",
+    "isYouTube": true,
+    "views": "52M+ plays"
+  },
+  {
+    "id": "ymusic-fDiEUxt9l7c",
+    "youtubeId": "fDiEUxt9l7c",
+    "title": "Haareya (Original Mix)",
+    "author": "Arijit Singh",
+    "category": "Bollywood",
+    "duration": "3:40",
+    "thumbnail": "https://i.ytimg.com/vi/fDiEUxt9l7c/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/fDiEUxt9l7c.m4a",
+    "isYouTube": true,
+    "views": "75M+ plays"
+  },
+  {
+    "id": "ymusic-pxCWiYFkvTg",
+    "youtubeId": "pxCWiYFkvTg",
+    "title": "Aathma Raama",
+    "author": "Brodha V",
+    "category": "Trending Music",
+    "duration": "4:04",
+    "thumbnail": "https://i.ytimg.com/vi/pxCWiYFkvTg/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/pxCWiYFkvTg.m4a",
+    "isYouTube": true,
+    "views": "45M+ plays"
+  },
+  {
+    "id": "ymusic-_3GKsIFtEoE",
+    "youtubeId": "_3GKsIFtEoE",
+    "title": "Coming Up Roses",
+    "author": "Harry Styles",
+    "category": "Pop & Synthwave",
+    "duration": "4:21",
+    "thumbnail": "https://i.ytimg.com/vi/_3GKsIFtEoE/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/_3GKsIFtEoE.m4a",
+    "isYouTube": true,
+    "views": "35M+ plays"
+  },
+  {
+    "id": "ymusic-403FGqa-Uv8",
+    "youtubeId": "403FGqa-Uv8",
+    "title": "Hero - Motivational Symphony",
+    "author": "Team Fearless",
+    "category": "Trending Music",
+    "duration": "4:19",
+    "thumbnail": "https://i.ytimg.com/vi/403FGqa-Uv8/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/403FGqa-Uv8.m4a",
+    "isYouTube": true,
+    "views": "50M+ plays"
+  },
+  {
+    "id": "ymusic-LVo7lFdwb0M",
+    "youtubeId": "LVo7lFdwb0M",
+    "title": "Beautiful Soul Acoustic",
+    "author": "Fearless Soul",
+    "category": "Lofi & Chill",
+    "duration": "5:13",
+    "thumbnail": "https://i.ytimg.com/vi/LVo7lFdwb0M/hq720.jpg",
+    "streamUrl": "https://raw.githubusercontent.com/aditys4444/Surmio-Music-app/main/public/media/LVo7lFdwb0M.m4a",
+    "isYouTube": true,
+    "views": "30M+ plays"
   }
 ];
 
@@ -1038,6 +954,12 @@
     cvAmbientBackdrop: document.getElementById('cvAmbientBackdrop'),
     cvMinimizeBtn: document.getElementById('cvMinimizeBtn'),
     cvSpeedBtn: document.getElementById('cvSpeedBtn'),
+    cvSpeedDrawer: document.getElementById('cvSpeedDrawer'),
+    cvCloseSpeedDrawerBtn: document.getElementById('cvCloseSpeedDrawerBtn'),
+    cvCurrentSpeedLabel: document.getElementById('cvCurrentSpeedLabel'),
+    cvSpeedSheetGrid: document.getElementById('cvSpeedSheetGrid'),
+    viewSearchSuggestions: document.getElementById('viewSearchSuggestions'),
+    btnSettingsViewDownloads: document.getElementById('btnSettingsViewDownloads'),
     cvSpeedMenu: document.getElementById('cvSpeedMenu'),
 
     // Pure Audio Engine
@@ -1581,18 +1503,34 @@
   // Studio Playback Speed Controller
   // ==========================================
   function openSpeedModal() {
-    if (!DOM.surmioSpeedModal) return;
     const cur = state.selectedSpeed || 1.0;
-    if (DOM.speedOptionsGrid) {
-      DOM.speedOptionsGrid.querySelectorAll('.speed-opt-btn').forEach((b) => {
-        const s = parseFloat(b.dataset.speed);
-        b.classList.toggle('active', Math.abs(s - cur) < 0.01);
-      });
+    if (DOM.cvSpeedDrawer) {
+      if (DOM.cvCurrentSpeedLabel) {
+        const labelMap = { 0.5: '0.5x (Half Speed)', 0.75: '0.75x (Relaxed)', 1.0: '1.0x (Normal)', 1.25: '1.25x (Brisk)', 1.5: '1.5x (Fast)', 2.0: '2.0x (2x Speed)' };
+        DOM.cvCurrentSpeedLabel.textContent = labelMap[cur] || `${cur}x`;
+      }
+      if (DOM.cvSpeedSheetGrid) {
+        DOM.cvSpeedSheetGrid.querySelectorAll('.speed-sheet-pill').forEach((b) => {
+          const s = parseFloat(b.dataset.speed);
+          b.classList.toggle('active', Math.abs(s - cur) < 0.01);
+        });
+      }
+      DOM.cvSpeedDrawer.classList.toggle('open');
+      return;
     }
-    DOM.surmioSpeedModal.style.display = 'flex';
+    if (DOM.surmioSpeedModal) {
+      if (DOM.speedOptionsGrid) {
+        DOM.speedOptionsGrid.querySelectorAll('.speed-opt-btn').forEach((b) => {
+          const s = parseFloat(b.dataset.speed);
+          b.classList.toggle('active', Math.abs(s - cur) < 0.01);
+        });
+      }
+      DOM.surmioSpeedModal.style.display = 'flex';
+    }
   }
 
   function closeSpeedModal() {
+    if (DOM.cvSpeedDrawer) DOM.cvSpeedDrawer.classList.remove('open');
     if (DOM.surmioSpeedModal) DOM.surmioSpeedModal.style.display = 'none';
   }
 
@@ -1611,13 +1549,43 @@
     if (audio) {
       audio.playbackRate = speed;
     }
-    if (ytPlayer && ytReady && ytPlayer.setPlaybackRate) {
-      try { ytPlayer.setPlaybackRate(speed); } catch (_) {}
-    }
     if (DOM.cvSpeedBtn) {
       DOM.cvSpeedBtn.textContent = `${speed}x`;
     }
-    showToast(`Playback speed: ${speed}x`);
+    if (DOM.cvCurrentSpeedLabel) {
+      const labelMap = { 0.5: '0.5x (Half Speed)', 0.75: '0.75x (Relaxed)', 1.0: '1.0x (Normal)', 1.25: '1.25x (Brisk)', 1.5: '1.5x (Fast)', 2.0: '2.0x (2x Speed)' };
+      DOM.cvCurrentSpeedLabel.textContent = labelMap[speed] || `${speed}x`;
+    }
+    if (DOM.cvSpeedSheetGrid) {
+      DOM.cvSpeedSheetGrid.querySelectorAll('.speed-sheet-pill').forEach((b) => {
+        const s = parseFloat(b.dataset.speed);
+        b.classList.toggle('active', Math.abs(s - speed) < 0.01);
+      });
+    }
+    showToast(`Playback speed set to ${speed}x`);
+    setTimeout(() => closeSpeedModal(), 280);
+  }
+
+  function syncNativeQueue() {
+    if (!window.AndroidAudioBridge) return;
+    try {
+      const curIdx = Math.max(0, (state.currentQueue || []).findIndex(t => t.id === state.currentTrack?.id));
+      const serializedQueue = (state.currentQueue || []).slice(0, 100).map((t) => ({
+        title: t.title || 'Song',
+        author: t.author || t.artist || 'Surmio',
+        artist: t.author || t.artist || 'Surmio',
+        thumbnail: getHighResThumbnail(t, true),
+        audioSrc: getTrackAudioSrc(t),
+        durationSec: parseDurationToSeconds(t.duration) || 180,
+      }));
+      if (typeof window.AndroidAudioBridge.setQueueWithIndex === 'function') {
+        window.AndroidAudioBridge.setQueueWithIndex(JSON.stringify(serializedQueue), curIdx);
+      } else if (typeof window.AndroidAudioBridge.setQueue === 'function') {
+        window.AndroidAudioBridge.setQueue(JSON.stringify(serializedQueue));
+      }
+    } catch (err) {
+      console.warn('Native queue sync warning:', err);
+    }
   }
 
   function initNativeAudioBridgeSync() {
@@ -1811,6 +1779,24 @@
         openSpeedModal();
       });
     }
+    if (DOM.cvCloseSpeedDrawerBtn) {
+      DOM.cvCloseSpeedDrawerBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeSpeedModal();
+      });
+    }
+    if (DOM.cvSpeedSheetGrid) {
+      DOM.cvSpeedSheetGrid.querySelectorAll('.speed-sheet-pill').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const speed = parseFloat(btn.dataset.speed);
+          if (!isNaN(speed)) setPlaybackSpeed(speed);
+        });
+      });
+    }
+    if (DOM.btnSettingsViewDownloads) {
+      DOM.btnSettingsViewDownloads.addEventListener('click', () => switchView('downloads'));
+    }
     if (DOM.btnCloseSpeedModal && DOM.surmioSpeedModal) {
       DOM.btnCloseSpeedModal.addEventListener('click', closeSpeedModal);
     }
@@ -1958,6 +1944,7 @@
     state.currentQueue = [track, ...related, ...remaining];
     state.queueIndex = 0;
     state.queueDrawerDirty = true;
+    syncNativeQueue();
 
     const thumb = getHighResThumbnail(track, true);
 
@@ -2981,6 +2968,57 @@
         if (state.currentView === 'downloads') renderDownloads();
         showToast(`✓ Saved "${track.title}" to downloads`);
         return;
+      }
+
+      // 1b. If running on native Android app, use platform DownloadManager to save directly to Download/
+      if (window.AndroidAudioBridge && typeof window.AndroidAudioBridge.downloadTrackToDevice === 'function') {
+        const audioUrl = getTrackAudioSrc(track);
+        const cleanFilename = (track.title || 'audio_track')
+          .replace(/[/\\?%*:|"<>]/g, '_')
+          .trim() || 'track';
+        const ok = window.AndroidAudioBridge.downloadTrackToDevice(
+          audioUrl,
+          `${cleanFilename}.m4a`,
+          track.title,
+          track.author || 'Surmio'
+        );
+        if (ok) {
+          track.isDownloaded = true;
+          track.downloadedBlobUrl = audioUrl;
+          const dlItem = {
+            id: `dl-${Date.now()}`,
+            trackId: track.id,
+            title: track.title,
+            author: track.author || 'Surmio',
+            thumbnail: getHighResThumbnail(track),
+            duration: track.duration || '3:30',
+            format: 'Device Storage (Download/ folder)',
+            size: '3.8 MB',
+            status: 'completed',
+            verifiedRealAudio: true,
+            date: 'Just now',
+            streamUrl: audioUrl,
+            downloadedBlobUrl: audioUrl,
+            isDownloaded: true,
+          };
+          state.downloads.unshift(dlItem);
+          try {
+            localStorage.setItem('alyvex_user_downloads', JSON.stringify(state.downloads));
+          } catch (_) {}
+
+          state.isDownloadingTrackId = null;
+          if (isCurTrack && dlBtn) {
+            dlBtn.classList.remove('downloading');
+            dlBtn.classList.add('downloaded');
+            if (dlLabel) dlLabel.textContent = 'Saved';
+            dlBtn.setAttribute('title', 'Downloaded to device');
+            dlBtn.setAttribute('aria-busy', 'false');
+          }
+          updateDownloadBadges();
+          if (state.currentView === 'downloads') renderDownloads();
+          showToast(`✓ Saved "${track.title}" to device Downloads folder`);
+          return;
+        }
       }
 
       // 2. Fetch real audio from high-speed remote CDN stream or authorized backend
@@ -6124,8 +6162,8 @@
     }));
     DOM.drawerLinks.forEach((btn) => btn.addEventListener('click', () => switchView(btn.dataset.nav)));
 
-    DOM.quickDownloadsBtn.addEventListener('click', () => switchView('downloads'));
-    DOM.quickLibraryBtn.addEventListener('click', () => switchView('library'));
+    if (DOM.quickDownloadsBtn) DOM.quickDownloadsBtn.addEventListener('click', () => switchView('downloads'));
+    if (DOM.quickLibraryBtn) DOM.quickLibraryBtn.addEventListener('click', () => switchView('library'));
 
     if (DOM.sidebarBrandTrigger) {
       DOM.sidebarBrandTrigger.addEventListener('click', () => switchView('home'));
@@ -6158,8 +6196,8 @@
       });
     }
 
-    DOM.mobileMenuBtn.addEventListener('click', openMobileDrawer);
-    DOM.drawerOverlay.addEventListener('click', closeMobileDrawer);
+    if (DOM.mobileMenuBtn) DOM.mobileMenuBtn.addEventListener('click', openMobileDrawer);
+    if (DOM.drawerOverlay) DOM.drawerOverlay.addEventListener('click', closeMobileDrawer);
   }
 
   function openMobileDrawer() {
@@ -6224,6 +6262,151 @@
   }
 
   let searchDebounce = null;
+  function renderRealtimeSuggestions(query, targetContainer) {
+    if (!targetContainer) return;
+    const q = query.trim().toLowerCase();
+    if (!q) {
+      targetContainer.style.display = 'none';
+      targetContainer.innerHTML = '';
+      return;
+    }
+
+    targetContainer.innerHTML = `
+      <div class="search-suggest-loading">
+        <div class="search-suggest-spinner"></div>
+        <span>Searching catalog...</span>
+      </div>
+    `;
+    targetContainer.style.display = 'block';
+
+    const pool = (state.allTracks && state.allTracks.length > 0) ? state.allTracks : EMBEDDED_CATALOG;
+    const matchedTracks = pool.filter((t) => t.title && t.title.toLowerCase().includes(q)).slice(0, 5);
+    
+    // Distinct matching artists
+    const artistMap = new Map();
+    pool.forEach((t) => {
+      const a = t.author || 'Surmio';
+      if (a.toLowerCase().includes(q)) {
+        if (!artistMap.has(a)) artistMap.set(a, []);
+        artistMap.get(a).push(t);
+      }
+    });
+
+    // Distinct matching albums / categories
+    const albumMap = new Map();
+    pool.forEach((t) => {
+      const c = t.category || 'General';
+      if (c.toLowerCase().includes(q)) {
+        if (!albumMap.has(c)) albumMap.set(c, []);
+        albumMap.get(c).push(t);
+      }
+    });
+
+    if (matchedTracks.length === 0 && artistMap.size === 0 && albumMap.size === 0) {
+      targetContainer.innerHTML = `
+        <div class="search-suggest-empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28" style="opacity:0.5; margin-bottom:4px;">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            <line x1="8" y1="11" x2="14" y2="11"></line>
+          </svg>
+          <div>No matching songs, artists, or albums found for "${escapeHtml(query)}"</div>
+        </div>
+      `;
+      return;
+    }
+
+    targetContainer.innerHTML = '';
+    const frag = document.createDocumentFragment();
+
+    // 1. Matched Tracks
+    if (matchedTracks.length > 0) {
+      const g = document.createElement('div');
+      g.className = 'search-suggest-group';
+      g.innerHTML = '<div class="search-suggest-header">Matching Songs</div>';
+      matchedTracks.forEach((t) => {
+        const row = document.createElement('div');
+        row.className = 'search-suggest-item';
+        const thumb = getHighResThumbnail(t);
+        row.innerHTML = `
+          <img class="search-suggest-thumb" src="${thumb}" alt="Art" loading="lazy" decoding="async" onerror="this.src='${DEFAULT_THUMB}'">
+          <div class="search-suggest-meta">
+            <div class="search-suggest-title">${escapeHtml(t.title || 'Track')}</div>
+            <div class="search-suggest-sub">${escapeHtml(t.author || 'Surmio')}</div>
+          </div>
+          <span class="search-suggest-time">${escapeHtml(t.duration || '')}</span>
+        `;
+        row.addEventListener('click', (e) => {
+          e.stopPropagation();
+          targetContainer.style.display = 'none';
+          loadTrack(t, true);
+        });
+        g.appendChild(row);
+      });
+      frag.appendChild(g);
+    }
+
+    // 2. Matched Artists
+    if (artistMap.size > 0) {
+      const g = document.createElement('div');
+      g.className = 'search-suggest-group';
+      g.innerHTML = '<div class="search-suggest-header">Artists</div>';
+      let count = 0;
+      artistMap.forEach((tracks, aName) => {
+        if (count >= 3) return;
+        count++;
+        const row = document.createElement('div');
+        row.className = 'search-suggest-item';
+        const thumb = getHighResThumbnail(tracks[0]);
+        row.innerHTML = `
+          <img class="search-suggest-avatar" src="${thumb}" alt="Artist" loading="lazy" decoding="async" onerror="this.src='${DEFAULT_THUMB}'">
+          <div class="search-suggest-meta">
+            <div class="search-suggest-title">${escapeHtml(aName)}</div>
+            <div class="search-suggest-sub">${tracks.length} Songs • Artist</div>
+          </div>
+        `;
+        row.addEventListener('click', (e) => {
+          e.stopPropagation();
+          targetContainer.style.display = 'none';
+          openArtistDetail(aName);
+        });
+        g.appendChild(row);
+      });
+      frag.appendChild(g);
+    }
+
+    // 3. Matched Albums / Categories
+    if (albumMap.size > 0) {
+      const g = document.createElement('div');
+      g.className = 'search-suggest-group';
+      g.innerHTML = '<div class="search-suggest-header">Albums & Genres</div>';
+      let count = 0;
+      albumMap.forEach((tracks, cName) => {
+        if (count >= 3) return;
+        count++;
+        const row = document.createElement('div');
+        row.className = 'search-suggest-item';
+        const thumb = getHighResThumbnail(tracks[0]);
+        row.innerHTML = `
+          <img class="search-suggest-thumb" src="${thumb}" alt="Album" loading="lazy" decoding="async" onerror="this.src='${DEFAULT_THUMB}'">
+          <div class="search-suggest-meta">
+            <div class="search-suggest-title">${escapeHtml(cName)}</div>
+            <div class="search-suggest-sub">${tracks.length} tracks • Collection</div>
+          </div>
+        `;
+        row.addEventListener('click', (e) => {
+          e.stopPropagation();
+          targetContainer.style.display = 'none';
+          openAlbumDetail(cName);
+        });
+        g.appendChild(row);
+      });
+      frag.appendChild(g);
+    }
+
+    targetContainer.appendChild(frag);
+  }
+
   function setupSearch() {
     function resetSearchToBrowse() {
       if (DOM.searchResultQueryTitle) DOM.searchResultQueryTitle.textContent = 'Find your next favourite';
@@ -6232,6 +6415,7 @@
       if (DOM.artistSpotlightCard) DOM.artistSpotlightCard.style.display = 'none';
       if (DOM.emptySearchState) DOM.emptySearchState.style.display = 'none';
       if (DOM.searchBrowseSection) DOM.searchBrowseSection.style.display = 'block';
+      if (DOM.viewSearchSuggestions) DOM.viewSearchSuggestions.style.display = 'none';
       renderSearchGenreTiles();
     }
 
@@ -6244,17 +6428,21 @@
       clearTimeout(searchDebounce);
       if (!q) {
         if (DOM.searchDropdown) DOM.searchDropdown.style.display = 'none';
+        if (DOM.viewSearchSuggestions) DOM.viewSearchSuggestions.style.display = 'none';
         resetSearchToBrowse();
         return;
       }
 
-      if (srcInput === DOM.searchInput) {
-        fetchSuggestions(q);
+      // Render suggestions dropdown instantly
+      if (srcInput === DOM.viewSearchInput && DOM.viewSearchSuggestions) {
+        renderRealtimeSuggestions(q, DOM.viewSearchSuggestions);
+      } else if (DOM.searchDropdown) {
+        renderRealtimeSuggestions(q, DOM.searchDropdown);
       }
 
       searchDebounce = setTimeout(() => {
         executeSearch(q, false);
-      }, 300);
+      }, 240);
     }
 
     if (DOM.searchInput) {
@@ -6272,6 +6460,7 @@
       DOM.viewSearchInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
           const q = DOM.viewSearchInput.value.trim();
+          if (DOM.viewSearchSuggestions) DOM.viewSearchSuggestions.style.display = 'none';
           if (q) executeSearch(q, true);
         }
       });
@@ -6286,6 +6475,16 @@
         }
       });
     }
+
+    // Dismiss suggestions on outside click
+    document.addEventListener('click', (e) => {
+      if (DOM.viewSearchSuggestions && !e.target.closest('.search-view-bar-wrap')) {
+        DOM.viewSearchSuggestions.style.display = 'none';
+      }
+      if (DOM.searchDropdown && !e.target.closest('.topbar-search-wrapper')) {
+        DOM.searchDropdown.style.display = 'none';
+      }
+    });
 
     if (DOM.searchClearBtn) {
       DOM.searchClearBtn.addEventListener('click', () => {
@@ -6305,6 +6504,7 @@
           DOM.viewSearchInput.focus();
         }
         DOM.viewSearchClearBtn.style.display = 'none';
+        if (DOM.viewSearchSuggestions) DOM.viewSearchSuggestions.style.display = 'none';
         resetSearchToBrowse();
       });
     }
@@ -6322,29 +6522,6 @@
     if (DOM.searchBackBtn) {
       DOM.searchBackBtn.addEventListener('click', () => switchView('home'));
     }
-  }
-
-  async function fetchSuggestions(q) {
-    try {
-      const res = await fetch(apiUrl(`/api/suggestions?q=${encodeURIComponent(q)}`));
-      const data = await res.json();
-      if (data && data.suggestions && data.suggestions.length > 0) {
-        DOM.suggestList.innerHTML = '';
-        data.suggestions.forEach((s) => {
-          const item = document.createElement('div');
-          item.className = 'suggest-item';
-          item.textContent = s;
-          item.onclick = () => {
-            DOM.searchInput.value = s;
-            executeSearch(s, true);
-          };
-          DOM.suggestList.appendChild(item);
-        });
-        document.getElementById('dropdownHistorySection').style.display = 'none';
-        document.getElementById('dropdownSuggestSection').style.display = 'block';
-        DOM.searchDropdown.style.display = 'block';
-      }
-    } catch (_) {}
   }
 
   let currentSearchFilter = 'all';

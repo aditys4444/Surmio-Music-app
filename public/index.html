@@ -417,6 +417,9 @@
             >
             <button class="search-clear-btn" id="viewSearchClearBtn" aria-label="Clear">✕</button>
           </div>
+          <!-- Live Real-Time Search Suggestions Dropdown -->
+          <div class="live-search-suggestions-dropdown" id="viewSearchSuggestions" style="display: none;"></div>
+          
         </div>
 
         <!-- Search Filter Pills (All, Songs, Artists, Albums) -->
@@ -693,15 +696,29 @@
             </div>
           </div>
 
-          <!-- Storage & Device Scanner -->
-          <div class="settings-card">
-            <h3 class="settings-card-title">Your music</h3>
+          <!-- Music Library & Storage Section -->
+          <div class="settings-card" id="settingsLibraryCard">
+            <h3 class="settings-card-title">Library & Device Storage</h3>
             <div class="setting-row">
               <div class="setting-text">
-                <div class="setting-name">Add music from device</div>
-                <div class="setting-desc">Choose audio files from your device to add to your library.</div>
+                <div class="setting-name">Offline Downloads</div>
+                <div class="setting-desc" id="settingsDownloadDesc">Manage downloaded songs saved to your device for continuous offline listening.</div>
               </div>
-              <button class="btn-setting-action" id="btnSettingsScanStorage">Add files</button>
+              <button class="btn-setting-action" id="btnSettingsViewDownloads">View Downloads</button>
+            </div>
+            <div class="setting-row">
+              <div class="setting-text">
+                <div class="setting-name">Add device music files</div>
+                <div class="setting-desc">Scan and import local audio files stored on this phone.</div>
+              </div>
+              <button class="btn-setting-action" id="btnSettingsScanStorage">Import Files</button>
+            </div>
+            <div class="setting-row">
+              <div class="setting-text">
+                <div class="setting-name">Audio Streaming Quality</div>
+                <div class="setting-desc">Pure studio audio stream • 320 kbps high bit-rate</div>
+              </div>
+              <span class="setting-badge success">Studio Hi-Fi</span>
             </div>
             <div class="setting-row">
               <div class="setting-text">
@@ -709,21 +726,6 @@
                 <div class="setting-desc">Remove recent listening and search history from this device.</div>
               </div>
               <button class="btn-setting-action danger" id="btnClearCacheBtn">Clear history</button>
-            </div>
-          </div>
-
-          <!-- Backend Server Connection for APK / Local Network -->
-          <div class="settings-card" id="settingsServerCard">
-            <h3 class="settings-card-title">Backend Connection</h3>
-            <div class="setting-row">
-              <div class="setting-text">
-                <div class="setting-name">Server API Address</div>
-                <div class="setting-desc">Required for audio downloads and streaming on mobile APK. Default: http://10.0.2.2:3000 (Android emulator) or your computer's IP on Wi-Fi (e.g. http://10.151.6.72:3000).</div>
-              </div>
-              <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:6px;">
-                <input type="text" id="settingServerUrl" class="setting-input-url" placeholder="http://10.0.2.2:3000" style="padding:7px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#f3f3ed; font-size:12px; width:220px; outline:none;">
-                <button class="btn-setting-action" id="btnSaveServerUrl">Save & Connect</button>
-              </div>
             </div>
           </div>
 
@@ -937,17 +939,7 @@
 
             <div class="cv-top-right-tools">
               <!-- Playback Speed -->
-              <div class="cv-dropdown">
-                <button class="cv-btn-pill" id="cvSpeedBtn" title="Playback Speed">1.0x</button>
-                <div class="cv-menu" id="cvSpeedMenu">
-                  <button data-speed="0.5">0.5x</button>
-                  <button data-speed="0.75">0.75x</button>
-                  <button data-speed="1.0" class="active">1.0x (Normal)</button>
-                  <button data-speed="1.25">1.25x</button>
-                  <button data-speed="1.5">1.5x</button>
-                  <button data-speed="2.0">2.0x</button>
-                </div>
-              </div>
+              <button class="cv-btn-pill" id="cvSpeedBtn" title="Playback Speed" aria-haspopup="dialog">1.0x</button>
             </div>
           </div>
 
@@ -1222,6 +1214,56 @@
             </div>
           </div>
 
+        
+
+          <!-- ==================================================================
+               SLIDING DRAWER: PLAYBACK SPEED (Compact Mobile Sheet)
+               ================================================================== -->
+          <div class="cv-slide-drawer speed-drawer surmio-speed-drawer" id="cvSpeedDrawer">
+            <div class="drawer-drag-handle"></div>
+            <div class="drawer-header-row">
+              <div class="drawer-heading">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <circle cx="12" cy="12" r="9"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <h3>Playback Speed</h3>
+              </div>
+              <button class="drawer-close-btn" id="cvCloseSpeedDrawerBtn">✕</button>
+            </div>
+            <div class="speed-drawer-content">
+              <div class="speed-drawer-status-card">
+                <span class="speed-status-badge">CURRENT VELOCITY</span>
+                <span class="speed-current-val" id="cvCurrentSpeedLabel">1.0x (Normal)</span>
+              </div>
+              <div class="speed-options-sheet-grid" id="cvSpeedSheetGrid">
+                <button class="speed-sheet-pill" data-speed="0.5">
+                  <span class="pill-speed-num">0.5x</span>
+                  <span class="pill-speed-label">Half Speed</span>
+                </button>
+                <button class="speed-sheet-pill" data-speed="0.75">
+                  <span class="pill-speed-num">0.75x</span>
+                  <span class="pill-speed-label">Relaxed</span>
+                </button>
+                <button class="speed-sheet-pill active" data-speed="1.0">
+                  <span class="pill-speed-num">1.0x</span>
+                  <span class="pill-speed-label">Normal</span>
+                </button>
+                <button class="speed-sheet-pill" data-speed="1.25">
+                  <span class="pill-speed-num">1.25x</span>
+                  <span class="pill-speed-label">Brisk</span>
+                </button>
+                <button class="speed-sheet-pill" data-speed="1.5">
+                  <span class="pill-speed-num">1.5x</span>
+                  <span class="pill-speed-label">Fast</span>
+                </button>
+                <button class="speed-sheet-pill" data-speed="2.0">
+                  <span class="pill-speed-num">2.0x</span>
+                  <span class="pill-speed-label">2x Speed</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div> <!-- End cinevault-unified-player -->
       </div>
     </div>
@@ -1502,6 +1544,6 @@
   <input id="localAudioPicker" type="file" accept="audio/*,.mp3,.m4a,.aac,.wav,.ogg,.flac,.opus" multiple hidden>
 
   <script src="catalog.js"></script>
-  <script src="app.js?v=2.7"></script>
+  <script src="app.js?v=2.8"></script>
 </body>
 </html>

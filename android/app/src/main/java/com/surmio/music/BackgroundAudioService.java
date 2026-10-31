@@ -426,7 +426,10 @@ public class BackgroundAudioService extends Service {
 
     public synchronized void playNextTrackNatively() {
         if (playlist != null && !playlist.isEmpty()) {
-            currentIndex = (currentIndex + 1) % playlist.size();
+            currentIndex = (currentIndex + 1);
+            if (currentIndex >= playlist.size()) {
+                currentIndex = 0; // Seamless loop to first item in ascending order
+            }
             TrackItem next = playlist.get(currentIndex);
             playTrack(next.title, next.artist, next.artworkUrl, next.audioSrc, next.durationMs);
             notifyUiSync("trackChanged");
@@ -443,6 +446,10 @@ public class BackgroundAudioService extends Service {
     }
 
     public synchronized void updatePlaylistFromJson(String queueJson) {
+        updatePlaylistFromJson(queueJson, 0);
+    }
+
+    public synchronized void updatePlaylistFromJson(String queueJson, int startIndex) {
         if (queueJson == null || queueJson.isEmpty()) return;
         try {
             JSONArray arr = new JSONArray(queueJson);
@@ -454,7 +461,14 @@ public class BackgroundAudioService extends Service {
                 String art = obj.optString("thumbnail", "");
                 String src = obj.optString("audioSrc", obj.optString("streamUrl", ""));
                 long dur = (long) (obj.optDouble("durationSec", 180) * 1000);
-                playlist.add(new TrackItem(t, a, art, src, dur));
+                if (src != null && !src.isEmpty()) {
+                    playlist.add(new TrackItem(t, a, art, src, dur));
+                }
+            }
+            if (startIndex >= 0 && startIndex < playlist.size()) {
+                currentIndex = startIndex;
+            } else {
+                currentIndex = 0;
             }
         } catch (Exception e) {
             Log.w("SurmioAudio", "Error parsing queue JSON: " + e.getMessage());

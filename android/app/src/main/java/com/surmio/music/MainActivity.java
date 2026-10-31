@@ -1,8 +1,13 @@
 package com.surmio.music;
 
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
@@ -140,8 +145,46 @@ public class MainActivity extends BridgeActivity {
                 public void setQueue(String queueJson) {
                     BackgroundAudioService service = BackgroundAudioService.sInstance;
                     if (service != null) {
-                        service.updatePlaylistFromJson(queueJson);
+                        service.updatePlaylistFromJson(queueJson, 0);
                     }
+                }
+
+                @JavascriptInterface
+                public void setQueueWithIndex(String queueJson, int startIndex) {
+                    BackgroundAudioService service = BackgroundAudioService.sInstance;
+                    if (service != null) {
+                        service.updatePlaylistFromJson(queueJson, startIndex);
+                    }
+                }
+
+                @JavascriptInterface
+                public boolean downloadTrackToDevice(String audioUrl, String fileName, String title, String artist) {
+                    try {
+                        if (audioUrl == null || audioUrl.isEmpty()) return false;
+                        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(audioUrl));
+                        String cleanTitle = (title != null && !title.isEmpty()) ? title : "Audio Track";
+                        String cleanSub = (artist != null && !artist.isEmpty()) ? artist : "Surmio Music";
+                        request.setTitle(cleanTitle);
+                        request.setDescription(cleanSub);
+                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+
+                        String safeName = (fileName != null && !fileName.isEmpty()) ? fileName : (cleanTitle.replaceAll("[^a-zA-Z0-9.-]", "_") + ".m4a");
+                        if (!safeName.endsWith(".m4a") && !safeName.endsWith(".mp3")) {
+                            safeName += ".m4a";
+                        }
+
+                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, safeName);
+                        request.allowScanningByMediaScanner();
+
+                        DownloadManager dm = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                        if (dm != null) {
+                            dm.enqueue(request);
+                            return true;
+                        }
+                    } catch (Exception e) {
+                        Log.e("SurmioAudio", "Error downloading via DownloadManager: " + e.getMessage());
+                    }
+                    return false;
                 }
 
                 @JavascriptInterface
